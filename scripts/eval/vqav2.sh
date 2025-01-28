@@ -7,9 +7,9 @@ CHUNKS=${#GPULIST[@]}
 
 SPLIT="llava_vqav2_mscoco_test-dev2015"
 
-MODEL_PATH="/mnt/data/sata/yinghu/checkpoints/llava_factory/tiny-llava-phi-2-clip-vit-large-patch14-336-baseline-finetune/"
-MODEL_NAME="tiny-llava-phi-2-clip-vit-large-patch14-336-baseline-finetune2"
-EVAL_DIR="/home/ai/data/llava/dataset/eval"
+MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune/checkpoint-5197"
+MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune"
+EVAL_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m tinyllava.eval.model_vqa_loader \
@@ -20,7 +20,7 @@ for IDX in $(seq 0 $((CHUNKS-1))); do
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
         --temperature 0 \
-        --conv-mode phi &
+        --conv-mode llama &
 done
 
 wait

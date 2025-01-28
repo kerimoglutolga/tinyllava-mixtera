@@ -19,8 +19,8 @@ MODEL_MAX_LENGTH="${10}"
 VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
 
-deepspeed --include localhost:4,5,6,7 --master_port 29501 tinyllava/train/train.py \
-    --deepspeed ./scripts/zero3.json \
+deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.py \
+    --deepspeed ./scripts/zero2.json \
     --data_path  $DATA_PATH \
     --image_folder $IMAGE_PATH \
     --is_multimodal True \
@@ -39,8 +39,8 @@ deepspeed --include localhost:4,5,6,7 --master_port 29501 tinyllava/train/train.
     --tune_vision_tower_from_layer 0 \
     --tune_type_connector full \
     --group_by_modality_length True \
-    --pretrained_model_path /mnt/data/sata/yinghu/checkpoints/llava_factory/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
-    --output_dir /mnt/data/sata/yinghu/checkpoints/llava_factory/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune \
+    --pretrained_model_path /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
+    --output_dir /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune-mixtera \
     --num_train_epochs 1 \
     --per_device_train_batch_size 8 \
     --per_device_eval_batch_size 4 \
@@ -59,6 +59,8 @@ deepspeed --include localhost:4,5,6,7 --master_port 29501 tinyllava/train/train.
     --gradient_checkpointing True \
     --dataloader_num_workers 8 \
     --lazy_preprocess True \
-    --report_to tensorboard \
+    --report_to wandb \
     --tokenizer_use_fast False \
-    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune
+    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune-mixtera \
+    --split_batches True \
+    --max_steps 500

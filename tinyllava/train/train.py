@@ -4,7 +4,6 @@ import pathlib
 import tokenizers
 import transformers
 
-
 from tinyllava.train.tinyllava_trainer import LLaVATrainer
 from tinyllava.training_recipe import TrainingRecipeFactory
 from tinyllava.utils import *
@@ -78,6 +77,7 @@ def train():
     data_arguments.is_multimodal = True
     data_module = make_supervised_data_module(tokenizer=tokenizer,
                                               data_args=data_arguments)
+
     log_trainable_params(model)  # not work well with zero3
     trainer = LLaVATrainer(model=model, #does not require model.to(device), huggingface/deepspeed does it for you?
                            tokenizer=tokenizer,

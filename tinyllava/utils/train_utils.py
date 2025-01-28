@@ -5,6 +5,26 @@ import torch
 from peft.tuners.lora import LoraLayer
 from deepspeed import zero
 from deepspeed.runtime.zero.partition_parameters import ZeroParamStatus
+from torch import distributed as dist
+
+def _get_distributed_info():
+    """
+    Retrieves world size, global rank, and local rank in a distributed training setup.
+    """
+    if not dist.is_initialized():
+        raise RuntimeError("Distributed training is not initialized.")
+    
+    # World size: Total number of processes
+    world_size = dist.get_world_size()
+    
+    # Global rank: Unique rank of the current process across all processes
+    global_rank = dist.get_rank()
+    
+    # Local rank: Unique rank of the current process within the node
+    # Available as an environment variable set by DeepSpeed
+    local_rank = int(os.environ.get("LOCAL_RANK", 0))
+    
+    return world_size, global_rank, local_rank
 
 
 def make_inputs_require_grad(module, input, output):

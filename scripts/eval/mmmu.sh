@@ -1,8 +1,8 @@
 #!/bin/bash
 
-MODEL_PATH="/mnt/data/sata/yinghu/checkpoints/llava_factory/tiny-llava-phi-2-siglip-so400m-patch14-384-base-finetune-final"
-MODEL_NAME="tiny-llava-phi-2-siglip-so400m-patch14-384-base-finetune-final"
-EVAL_DIR="/home/ai/data/llava/dataset/eval"
+MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-pretrain/checkpoint-2180"
+MODEL_NAME="TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-pretrain"
+EVAL_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval"
 
 python -m tinyllava.eval.model_vqa_mmmu \
     --model-path $MODEL_PATH \

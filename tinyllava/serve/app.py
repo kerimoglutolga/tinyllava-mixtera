@@ -355,4 +355,4 @@ if __name__ == "__main__":
     text_processor = TextPreprocess(tokenizer, args.conv_mode)
     demo = build_demo()
     demo.queue()
-    demo.launch(server_name=args.host, server_port=args.port, share=args.share)
+    demo.launch(server_name=args.host, server_port=args.port, share=True)

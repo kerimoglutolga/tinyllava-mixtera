@@ -5,6 +5,13 @@ from typing import Dict,  Sequence, TYPE_CHECKING
 from PIL import Image, ImageFile
 import os
 
+from mixtera.core.query.mixture.mixture_key import MixtureKey
+from mixtera.core.query.mixture.static_mixture import StaticMixture
+from tinyllava.utils.train_utils import _get_distributed_info
+from mixtera.core.client.mixtera_client import MixteraClient, QueryExecutionArgs, ResultStreamingArgs
+from mixtera.core.query.mixture.arbitrary_mixture import ArbitraryMixture
+from mixtera.core.query.query import Query
+
 from .text_preprocess import TextPreprocess
 from .image_preprocess import ImagePreprocess
 from ..utils.arguments import DataArguments
@@ -13,9 +20,9 @@ from ..utils.constants import *
 
 import transformers
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, IterableDataset
 
-
+from mixtera.torch import MixteraTorchDataset
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -60,15 +67,52 @@ class LazySupervisedDataset(Dataset):
         if 'image' in sources:
             image_file = self.list_data_dict[i]['image']
             image_folder = self.data_args.image_folder
-            image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
-            image = self.image_preprocess(image)
-            data_dict['image'] = image
+            image_path = os.path.join(image_folder, image_file)
+            # check if file exists 
+            if not os.path.exists(image_path):
+                crop_size = getattr(self.data_args.image_processor, 'crop_size', getattr(self.data_args.image_processor, 'size'))
+                data_dict['image'] = torch.zeros(3, crop_size['height'], crop_size['width'])
+            else:
+                image = Image.open(os.path.join(image_folder, image_file)).convert('RGB')
+                image = self.image_preprocess(image)
+                data_dict['image'] = image
         elif self.data_args.is_multimodal:
             # image does not exist in the data, but the model is multimodal
             # print(f'{i}:{sources}')
             crop_size = getattr(self.data_args.image_processor, 'crop_size', getattr(self.data_args.image_processor, 'size'))
             data_dict['image'] = torch.zeros(3, crop_size['height'], crop_size['width'])
         return data_dict
+
+
+class MixteraLLaVaDataset(IterableDataset):
+    def __init__(self, tokenizer: transformers.PreTrainedTokenizer,
+                    data_path: str,
+                    data_args: DataArguments,
+                    dataset):
+        IterableDataset.__init__(self)
+        self.dataset = dataset
+        self.tokenizer = tokenizer
+        self.data_args = data_args
+        self.text_preprocess = TextPreprocess(tokenizer, data_args.conv_version)
+        self.image_preprocess = ImagePreprocess(data_args.image_processor, data_args)
+
+    def __iter__(self):
+        for sample in self.dataset:
+            data_dict = self.text_preprocess(copy.deepcopy(sample["conversations"]))
+            if 'image' in sample :
+                image_path = sample["image_path"]
+                if not os.path.exists(image_path):
+                    crop_size = getattr(self.data_args.image_processor, 'crop_size', getattr(self.data_args.image_processor, 'size'))
+                    data_dict['image'] = torch.zeros(3, crop_size['height'], crop_size['width'])
+                else:
+                    image = Image.open(image_path).convert('RGB')
+                    image = self.image_preprocess(image)
+                    data_dict['image'] = image
+            elif self.data_args.is_multimodal:
+                # image does not exist in the data, but the model is multimodal
+                crop_size = getattr(self.data_args.image_processor, 'crop_size', getattr(self.data_args.image_processor, 'size'))
+                data_dict['image'] = torch.zeros(3, crop_size['height'], crop_size['width'])
+            yield data_dict
 
 
 @dataclass
@@ -114,14 +158,54 @@ class DataCollatorForSupervisedDataset(object):
                 batch['images'] = images
 
         return batch
+    
+def _get_mixtera_dataset(num_workers: int):
+    server_host = os.environ.get("MIXTERA_SERVER_ADDR", None)
+    server_port = os.environ.get("MIXTERA_SERVER_PORT", None)
+    job_id = os.environ.get("MIXTERA_JOB_ID", None)
+    chunk_size = int(os.environ.get("MIXTERA_CHUNK_SIZE", 1024))
+
+    assert server_host is not None, "MIXTERA_SERVER_ADDR must be set"
+    assert server_port is not None, "MIXTERA_SERVER_PORT must be set"
+    assert job_id is not None, "MIXTERA_JOB_ID must be set"
+
+    # Get world information
+    world_size, global_rank, local_rank = _get_distributed_info()
+
+    dp_groups = world_size
+
+    client = MixteraClient.from_remote(host=server_host, port=int(server_port))
+    query = Query.for_job(job_id).select(None)
+    mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": ["gqa"]}): 0.5, 
+                                         MixtureKey({"dataset": ["textvqa"]}): 0.5})
+
+    print(f"Creating Mixtera dataset with {dp_groups} data parallel groups.")
+
+    qea = QueryExecutionArgs(
+        mixture=mixture,
+        num_workers=num_workers,
+        dp_groups=world_size,
+        nodes_per_group=1,
+    )
+
+    rse = ResultStreamingArgs(
+        job_id=job_id,
+        tunnel_via_server=False,
+        dp_group_id=global_rank,  # Use global rank for DP group ID
+        node_id=0,
+    )
+
+    return MixteraTorchDataset(client, query, qea, rse)
 
 
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
                                 data_args) -> Dict:
     """Make dataset and collator for supervised fine-tuning."""
-    train_dataset = LazySupervisedDataset(tokenizer=tokenizer,
-                                          data_path=data_args.data_path,
-                                          data_args=data_args)
+
+    train_dataset = MixteraLLaVaDataset(tokenizer=tokenizer,
+                                        data_path=data_args.data_path,
+                                        data_args=data_args,
+                                        dataset=_get_mixtera_dataset(8))
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
                 eval_dataset=None,
