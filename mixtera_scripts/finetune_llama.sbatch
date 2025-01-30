@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=tinyllava_mixtera_finetune
-#SBATCH --output=./finetune_tinyllama.log
-#SBATCH --error=./finetune_tinyllama.err
+#SBATCH --output=./finetune_tinyllama_coco50_vg10_text40.log
+#SBATCH --error=./finetune_tinyllama_coco50_vg10_text40.err
 #SBATCH --partition=normal
 #SBATCH --environment=tinyllava
 #SBATCH --nodes=1
@@ -17,11 +17,11 @@ source /iopsstor/scratch/cscs/tkerimog/tinyllama_env/bin/activate
 
 # Mixtera configuration
 export MIXTERA_SERVER_ADDR=$(hostname)
-export MIXTERA_SERVER_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server
+export MIXTERA_SERVER_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_3
 export MIXTERA_SERVER_PORT=12345
 export MIXTERA_JOB_ID="mixtera_tinyllava_$(date +'%Y%m%d_%H%M%S')" 
 export MIXTERA_CHUNK_SIZE=256 # 4 * global_batch_size as a heuristic
-export MIXTERA_MIXTURE='{}' 
+export MIXTERA_MIXTURE='{"coco": 0.5, "vg": 0.10, "text": 0.40}' 
 
 # Start Mixtera server
 /iopsstor/scratch/cscs/tkerimog/tinyllama_env/bin/python -u -m mixtera.network.server.entrypoint \
@@ -43,11 +43,11 @@ VT_VERSION=google/siglip-so400m-patch14-384 # vision tower path in huggingface
 VT_VERSION2="" # if you are not using mof vision tower, keep it empty
 CN_VERSION=mlp2x_gelu # connector type, other options are: qformer, resampler, etc
 CONV_VERSION=llama #chat template, other options are: phi, llama, gemmma, etc
-VERSION=mixtera # experiment name for recording different runnings
+VERSION=mixtera-coco50_vg10_text40 # experiment name for recording different runnings
 TRAIN_RECIPE=common # training recipes, other options are: lora, qlora
 MODEL_MAX_LENGTH=2048
-MAX_STEPS=543 # number of update steps for training i.e. batch_size * gradient_accumulation_steps samples will be processed per step
-PRETRAINED_MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-pretrain-1"
+MAX_STEPS=600 # number of update steps for training i.e. batch_size * gradient_accumulation_steps samples will be processed per step
+PRETRAINED_MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-pretrain"
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
 

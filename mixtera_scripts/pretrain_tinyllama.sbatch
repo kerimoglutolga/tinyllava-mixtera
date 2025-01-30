@@ -45,7 +45,7 @@ CN_VERSION=mlp2x_gelu #connector type, other options are: qformer, resampler, et
 VERSION=mixtera #experiment name for recording different runnings
 TRAIN_RECIPE=common #training recipes, other options are: lora, qlora
 MODEL_MAX_LENGTH=2048
-MAX_STEPS=10000 #number of update steps for training i.e. batch_size * gradient_accumulation_steps samples will be processed per step
+MAX_STEPS=2176 #number of update steps for training i.e. batch_size * gradient_accumulation_steps samples will be processed per step
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
 
