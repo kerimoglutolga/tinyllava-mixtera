@@ -1,32 +1,31 @@
-2025-01-30 01:03:15.865 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
-2025-01-30 01:03:15.970 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
-2025-01-30 01:03:16.005 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
-2025-01-30 01:03:16.210 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
-2025-01-30 01:03:16.264 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
-2025-01-30 01:03:16.309 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:16.309 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:16.309 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
-2025-01-30 01:03:16.339 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_dataset_into_table:242 - Successfully registered dataset LLAVA_FINETUNE with id 2.
-2025-01-30 01:03:20.423 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:159 - Gathered 1 files, ready to insert
-2025-01-30 01:03:20.426 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:164 - Columns added to samples table based on parser schema.
-2025-01-30 01:03:20.428 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_files_into_table:253 - Inserting 1 files for dataset id = 2
-2025-01-30 01:03:20.434 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:179 - Prepared tasks for reading
-2025-01-30 01:03:23.289 | INFO     | __main__:main:46 - Starting server, serving from directory /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_3
-2025-01-30 01:03:23.293 | DEBUG    | mixtera.core.client.mixtera_client:__init__:138 - Initialized current mixture id to -1.
-2025-01-30 01:03:23.328 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_init_database:84 - Initializing database.
-2025-01-30 01:03:23.409 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_init_database:119 - Database initialized.
-2025-01-30 01:03:23.417 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:23.417 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:23.418 | DEBUG    | mixtera.core.query.query_cache:__init__:18 - Initializing QueryCache at /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_3/querycache
-2025-01-30 01:03:23.428 | INFO     | mixtera.network.server.server:_run_async:377 - Serving MixteraServer on ('172.28.15.124', 12345)
-2025-01-30 01:03:26.053 | DEBUG    | mixtera.core.client.mixtera_client:__init__:138 - Initialized current mixture id to -1.
-2025-01-30 01:03:26.061 | INFO     | mixtera.core.datacollection.index.parser.parser_collection:add_parser:219 - Registered medata parser GenericMetadataParser with the associated class <class 'mixtera.core.datacollection.index.parser.parser_collection.GenericMetadataParser'>
-2025-01-30 01:03:26.732 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_dataset_into_table:242 - Successfully registered dataset LLAVA_PRETRAIN with id 1.
-2025-01-30 01:03:27.613 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:159 - Gathered 1 files, ready to insert
-2025-01-30 01:03:27.616 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:164 - Columns added to samples table based on parser schema.
-2025-01-30 01:03:27.637 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_files_into_table:253 - Inserting 1 files for dataset id = 1
-2025-01-30 01:03:27.680 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:179 - Prepared tasks for reading
-2025-01-30 01:03:28.264 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
+2025-01-30 19:58:24.696 | INFO     | __main__:main:46 - Starting server, serving from directory /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server
+2025-01-30 19:58:24.699 | DEBUG    | mixtera.core.client.mixtera_client:__init__:138 - Initialized current mixture id to -1.
+2025-01-30 19:58:24.700 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_init_database:84 - Initializing database.
+2025-01-30 19:58:24.772 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_init_database:119 - Database initialized.
+2025-01-30 19:58:24.780 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
+2025-01-30 19:58:24.780 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
+2025-01-30 19:58:24.781 | DEBUG    | mixtera.core.query.query_cache:__init__:18 - Initializing QueryCache at /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server/querycache
+2025-01-30 19:58:24.791 | INFO     | mixtera.network.server.server:_run_async:377 - Serving MixteraServer on ('172.28.27.136', 12345)
+2025-01-30 19:58:27.885 | DEBUG    | mixtera.core.client.mixtera_client:__init__:138 - Initialized current mixture id to -1.
+2025-01-30 19:58:27.893 | INFO     | mixtera.core.datacollection.index.parser.parser_collection:add_parser:219 - Registered medata parser GenericMetadataParser with the associated class <class 'mixtera.core.datacollection.index.parser.parser_collection.GenericMetadataParser'>
+2025-01-30 19:58:28.258 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_dataset_into_table:242 - Successfully registered dataset LLAVA_PRETRAIN with id 1.
+2025-01-30 19:58:29.150 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:159 - Gathered 1 files, ready to insert
+2025-01-30 19:58:29.154 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:164 - Columns added to samples table based on parser schema.
+2025-01-30 19:58:29.172 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_files_into_table:253 - Inserting 1 files for dataset id = 1
+2025-01-30 19:58:29.218 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:179 - Prepared tasks for reading
+2025-01-30 19:58:33.031 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
+2025-01-30 19:58:33.138 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
+2025-01-30 19:58:33.173 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
+2025-01-30 19:58:33.584 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
+2025-01-30 19:58:33.636 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
+2025-01-30 19:58:33.666 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
+2025-01-30 19:58:33.666 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
+2025-01-30 19:58:33.666 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
+2025-01-30 19:58:33.696 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_dataset_into_table:242 - Successfully registered dataset LLAVA_FINETUNE with id 2.
+2025-01-30 19:58:37.742 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:159 - Gathered 1 files, ready to insert
+2025-01-30 19:58:37.745 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:164 - Columns added to samples table based on parser schema.
+2025-01-30 19:58:37.747 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_files_into_table:253 - Inserting 1 files for dataset id = 2
+2025-01-30 19:58:37.752 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:179 - Prepared tasks for reading
 Traceback (most recent call last):
   File "/usr/lib/python3.10/asyncio/streams.py", line 669, in read
     await self._wait_for_data('read')
@@ -76,59 +75,60 @@ Traceback (most recent call last):
   File "/usr/lib/python3.10/contextlib.py", line 249, in __aexit__
     raise RuntimeError("generator didn't stop after athrow()")
 RuntimeError: generator didn't stop after athrow()
-2025-01-30 01:03:28.390 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
-2025-01-30 01:03:28.433 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
-2025-01-30 01:03:28.813 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
-2025-01-30 01:03:28.922 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
-2025-01-30 01:03:28.938 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:28.938 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:28.938 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
-2025-01-30 01:03:28.963 | ERROR    | mixtera.network.server.server:_dispatch_client:358 - Some exception occured while handling client request: Unknown task id: None
-2025-01-30 01:03:28.963 | ERROR    | mixtera.network.server.server:_dispatch_client:359 - Unknown task id: None
+2025-01-30 19:58:45.924 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
+2025-01-30 19:58:46.055 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
+2025-01-30 19:58:46.099 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
+2025-01-30 19:58:46.413 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
+2025-01-30 19:58:46.579 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
+2025-01-30 19:58:46.601 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
+2025-01-30 19:58:46.602 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
+2025-01-30 19:58:46.602 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
+2025-01-30 19:58:46.628 | ERROR    | mixtera.network.server.server:_dispatch_client:358 - Some exception occured while handling client request: Unknown task id: None
+2025-01-30 19:58:46.628 | ERROR    | mixtera.network.server.server:_dispatch_client:359 - Unknown task id: None
 Traceback (most recent call last):
 
   File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
     return _run_code(code, main_globals, None,
            │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'mixtera.network.server', '__loader__': <_frozen_importlib_external....
-           │         └ <code object <module> at 0x4001b9528030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
-           └ <function _run_code at 0x400036143d00>
+           │         └ <code object <module> at 0x400195c24030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
+           └ <function _run_code at 0x400012883d00>
   File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
     exec(code, run_globals)
          │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'mixtera.network.server', '__loader__': <_frozen_importlib_external....
-         └ <code object <module> at 0x4001b9528030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
+         └ <code object <module> at 0x400195c24030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
 
   File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entrypoint.py", line 55, in <module>
     main()
-    └ <function main at 0x4001b9534280>
+    └ <function main at 0x400195c30280>
 
   File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entrypoint.py", line 49, in main
     server.run()
-    │      └ <function MixteraServer.run at 0x4001b9534160>
-    └ <mixtera.network.server.server.MixteraServer object at 0x4001b9507130>
+    │      └ <function MixteraServer.run at 0x400195c30160>
+    └ <mixtera.network.server.server.MixteraServer object at 0x400195c07160>
 
   File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/server.py", line 397, in run
     asyncio.run(self._run_async())
-    │       │   │    └ <function MixteraServer._run_async at 0x4001b95340d0>
-    │       │   └ <mixtera.network.server.server.MixteraServer object at 0x4001b9507130>
-    │       └ <function run at 0x40003615cdc0>
+    │       │   │    └ <function MixteraServer._run_async at 0x400195c300d0>
+    │       │   └ <mixtera.network.server.server.MixteraServer object at 0x400195c07160>
+    │       └ <function run at 0x40001289cdc0>
     └ <module 'asyncio' from '/usr/lib/python3.10/asyncio/__init__.py'>
 
   File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
     return loop.run_until_complete(main)
-           │    │                  └ <coroutine object MixteraServer._run_async at 0x4001b89a3b50>
-           │    └ <function BaseEventLoop.run_until_complete at 0x4000368d37f0>
+           │    │                  └ <coroutine object MixteraServer._run_async at 0x4001959aa7a0>
+           │    └ <function BaseEventLoop.run_until_complete at 0x4000130137f0>
            └ <_UnixSelectorEventLoop running=True closed=False debug=False>
   File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
     self.run_forever()
-    │    └ <function BaseEventLoop.run_forever at 0x4000368d3760>
+    │    └ <function BaseEventLoop.run_forever at 0x400013013760>
     └ <_UnixSelectorEventLoop running=True closed=False debug=False>
   File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
     self._run_once()
-    │    └ <function BaseEventLoop._run_once at 0x4000368d92d0>
+    │    └ <function BaseEventLoop._run_once at 0x4000130192d0>
     └ <_UnixSelectorEventLoop running=True closed=False debug=False>
   File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
     handle._run()
-    │      └ <function Handle._run at 0x400036874ca0>
+    │      └ <function Handle._run at 0x400012fb4ca0>
     └ <Handle Task.task_wakeup(<Future finished result=None>)>
   File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
     self._context.run(self._callback, *self._args)
@@ -143,281 +143,3 @@ Traceback (most recent call last):
     raise RuntimeError(f"Unknown task id: {task_int}")
 
 RuntimeError: Unknown task id: None
-2025-01-30 01:03:31.048 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
-2025-01-30 01:03:31.150 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
-2025-01-30 01:03:31.185 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
-2025-01-30 01:03:31.421 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
-2025-01-30 01:03:31.474 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
-2025-01-30 01:03:31.520 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:31.520 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:31.520 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
-2025-01-30 01:03:31.550 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_dataset_into_table:242 - Successfully registered dataset LLAVA_FINETUNE with id 2.
-2025-01-30 01:03:32.897 | INFO     | __main__:main:46 - Starting server, serving from directory /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_4
-2025-01-30 01:03:32.901 | DEBUG    | mixtera.core.client.mixtera_client:__init__:138 - Initialized current mixture id to -1.
-2025-01-30 01:03:32.915 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_init_database:84 - Initializing database.
-2025-01-30 01:03:32.983 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_init_database:119 - Database initialized.
-2025-01-30 01:03:32.991 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:32.991 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:32.992 | DEBUG    | mixtera.core.query.query_cache:__init__:18 - Initializing QueryCache at /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_4/querycache
-2025-01-30 01:03:33.002 | INFO     | mixtera.network.server.server:_run_async:377 - Serving MixteraServer on ('172.28.42.148', 12345)
-2025-01-30 01:03:35.562 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:159 - Gathered 1 files, ready to insert
-2025-01-30 01:03:35.567 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:164 - Columns added to samples table based on parser schema.
-2025-01-30 01:03:35.568 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_files_into_table:253 - Inserting 1 files for dataset id = 2
-2025-01-30 01:03:35.574 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:179 - Prepared tasks for reading
-2025-01-30 01:03:35.781 | DEBUG    | mixtera.core.client.mixtera_client:__init__:138 - Initialized current mixture id to -1.
-2025-01-30 01:03:35.790 | INFO     | mixtera.core.datacollection.index.parser.parser_collection:add_parser:219 - Registered medata parser GenericMetadataParser with the associated class <class 'mixtera.core.datacollection.index.parser.parser_collection.GenericMetadataParser'>
-2025-01-30 01:03:36.155 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_dataset_into_table:242 - Successfully registered dataset LLAVA_PRETRAIN with id 1.
-2025-01-30 01:03:37.036 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:159 - Gathered 1 files, ready to insert
-2025-01-30 01:03:37.040 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:164 - Columns added to samples table based on parser schema.
-2025-01-30 01:03:37.058 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_files_into_table:253 - Inserting 1 files for dataset id = 1
-2025-01-30 01:03:37.102 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:179 - Prepared tasks for reading
-2025-01-30 01:03:40.484 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
-2025-01-30 01:03:40.589 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
-2025-01-30 01:03:40.624 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
-2025-01-30 01:03:40.848 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
-2025-01-30 01:03:40.898 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
-2025-01-30 01:03:40.946 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:40.946 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:40.946 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
-2025-01-30 01:03:40.978 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_dataset_into_table:242 - Successfully registered dataset LLAVA_FINETUNE with id 2.
-2025-01-30 01:03:43.190 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
-2025-01-30 01:03:43.316 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
-2025-01-30 01:03:43.359 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/asyncio/streams.py", line 669, in read
-    await self._wait_for_data('read')
-  File "/usr/lib/python3.10/asyncio/streams.py", line 501, in _wait_for_data
-    await self._waiter
-asyncio.exceptions.CancelledError
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/asyncio/tasks.py", line 456, in wait_for
-    return fut.result()
-asyncio.exceptions.CancelledError
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 116, in _connect_to_server
-    yield reader, writer
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 349, in _register_dataset
-    return bool(await read_int(NUM_BYTES_FOR_IDENTIFIERS, reader))
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/network_utils.py", line 128, in read_int
-    if (bytes_data := await read_bytes(num_bytes, reader, timeout=timeout)) is not None
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/network_utils.py", line 34, in read_bytes
-    chunk = await asyncio.wait_for(reader.read(num_bytes - len(buffer)), timeout=remaining_time)
-  File "/usr/lib/python3.10/asyncio/tasks.py", line 458, in wait_for
-    raise exceptions.TimeoutError() from exc
-asyncio.exceptions.TimeoutError
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/mixtera_scripts/register_dataset.py", line 34, in <module>
-    client.register_dataset(finetune_dataset_name, finetune_dataset_path, LLaVADataset, parsing_func_finetune, "GenericMetadataParser")
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/core/client/server/server_stub.py", line 47, in register_dataset
-    return self.server_connection.register_dataset(
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 301, in register_dataset
-    return run_async_until_complete(
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/utils/utils.py", line 39, in run_async_until_complete
-    return asyncio.run(call)
-  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
-    return loop.run_until_complete(main)
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 326, in _register_dataset
-    async with self._connect_to_server() as (reader, writer):
-  File "/usr/lib/python3.10/contextlib.py", line 249, in __aexit__
-    raise RuntimeError("generator didn't stop after athrow()")
-RuntimeError: generator didn't stop after athrow()
-2025-01-30 01:03:43.633 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
-2025-01-30 01:03:43.765 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
-2025-01-30 01:03:43.812 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:43.813 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:43.813 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
-2025-01-30 01:03:43.840 | ERROR    | mixtera.network.server.server:_dispatch_client:358 - Some exception occured while handling client request: Unknown task id: None
-2025-01-30 01:03:43.841 | ERROR    | mixtera.network.server.server:_dispatch_client:359 - Unknown task id: None
-Traceback (most recent call last):
-
-  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'mixtera.network.server', '__loader__': <_frozen_importlib_external....
-           │         └ <code object <module> at 0x4001a1724030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
-           └ <function _run_code at 0x40001e3b3d00>
-  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
-    exec(code, run_globals)
-         │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'mixtera.network.server', '__loader__': <_frozen_importlib_external....
-         └ <code object <module> at 0x4001a1724030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
-
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entrypoint.py", line 55, in <module>
-    main()
-    └ <function main at 0x4001a172c280>
-
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entrypoint.py", line 49, in main
-    server.run()
-    │      └ <function MixteraServer.run at 0x4001a172c160>
-    └ <mixtera.network.server.server.MixteraServer object at 0x4001a1703160>
-
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/server.py", line 397, in run
-    asyncio.run(self._run_async())
-    │       │   │    └ <function MixteraServer._run_async at 0x4001a172c0d0>
-    │       │   └ <mixtera.network.server.server.MixteraServer object at 0x4001a1703160>
-    │       └ <function run at 0x40001e3ccdc0>
-    └ <module 'asyncio' from '/usr/lib/python3.10/asyncio/__init__.py'>
-
-  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
-    return loop.run_until_complete(main)
-           │    │                  └ <coroutine object MixteraServer._run_async at 0x4001a14a6730>
-           │    └ <function BaseEventLoop.run_until_complete at 0x40001eb437f0>
-           └ <_UnixSelectorEventLoop running=True closed=False debug=False>
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
-    self.run_forever()
-    │    └ <function BaseEventLoop.run_forever at 0x40001eb43760>
-    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
-    self._run_once()
-    │    └ <function BaseEventLoop._run_once at 0x40001eb492d0>
-    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
-    handle._run()
-    │      └ <function Handle._run at 0x40001eae4ca0>
-    └ <Handle Task.task_wakeup(<Future finished result=None>)>
-  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
-    self._context.run(self._callback, *self._args)
-    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
-    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
-    │    │            │    └ <member '_callback' of 'Handle' objects>
-    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
-    │    └ <member '_context' of 'Handle' objects>
-    └ <Handle Task.task_wakeup(<Future finished result=None>)>
-
-> File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/server.py", line 321, in _dispatch_client
-    raise RuntimeError(f"Unknown task id: {task_int}")
-
-RuntimeError: Unknown task id: None
-2025-01-30 01:03:45.011 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:159 - Gathered 1 files, ready to insert
-2025-01-30 01:03:45.016 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:164 - Columns added to samples table based on parser schema.
-2025-01-30 01:03:45.017 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_insert_files_into_table:253 - Inserting 1 files for dataset id = 2
-2025-01-30 01:03:45.024 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:179 - Prepared tasks for reading
-2025-01-30 01:03:52.664 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:192 - Processed chunk 1, inserting samples.
-2025-01-30 01:03:52.793 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:342 - Collected column-wise data for constructing pyarrow table.
-2025-01-30 01:03:52.836 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:366 - Constructed PyArrow Table.
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/asyncio/streams.py", line 669, in read
-    await self._wait_for_data('read')
-  File "/usr/lib/python3.10/asyncio/streams.py", line 501, in _wait_for_data
-    await self._waiter
-asyncio.exceptions.CancelledError
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/usr/lib/python3.10/asyncio/tasks.py", line 456, in wait_for
-    return fut.result()
-asyncio.exceptions.CancelledError
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 116, in _connect_to_server
-    yield reader, writer
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 349, in _register_dataset
-    return bool(await read_int(NUM_BYTES_FOR_IDENTIFIERS, reader))
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/network_utils.py", line 128, in read_int
-    if (bytes_data := await read_bytes(num_bytes, reader, timeout=timeout)) is not None
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/network_utils.py", line 34, in read_bytes
-    chunk = await asyncio.wait_for(reader.read(num_bytes - len(buffer)), timeout=remaining_time)
-  File "/usr/lib/python3.10/asyncio/tasks.py", line 458, in wait_for
-    raise exceptions.TimeoutError() from exc
-asyncio.exceptions.TimeoutError
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/mixtera_scripts/register_dataset.py", line 34, in <module>
-    client.register_dataset(finetune_dataset_name, finetune_dataset_path, LLaVADataset, parsing_func_finetune, "GenericMetadataParser")
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/core/client/server/server_stub.py", line 47, in register_dataset
-    return self.server_connection.register_dataset(
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 301, in register_dataset
-    return run_async_until_complete(
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/utils/utils.py", line 39, in run_async_until_complete
-    return asyncio.run(call)
-  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
-    return loop.run_until_complete(main)
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
-    return future.result()
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/connection/server_connection.py", line 326, in _register_dataset
-    async with self._connect_to_server() as (reader, writer):
-  File "/usr/lib/python3.10/contextlib.py", line 249, in __aexit__
-    raise RuntimeError("generator didn't stop after athrow()")
-RuntimeError: generator didn't stop after athrow()
-2025-01-30 01:03:53.111 | DEBUG    | mixtera.core.datacollection.mixtera_data_collection:_insert_samples_with_metadata:375 - Data inserted successfully.
-2025-01-30 01:03:53.266 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:195 - All tasks finished.
-2025-01-30 01:03:53.325 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 01:03:53.325 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 01:03:53.325 | INFO     | mixtera.core.datacollection.mixtera_data_collection:register_dataset:200 - Finished dataset registration.
-2025-01-30 01:03:53.354 | ERROR    | mixtera.network.server.server:_dispatch_client:358 - Some exception occured while handling client request: Unknown task id: None
-2025-01-30 01:03:53.354 | ERROR    | mixtera.network.server.server:_dispatch_client:359 - Unknown task id: None
-Traceback (most recent call last):
-
-  File "/usr/lib/python3.10/runpy.py", line 196, in _run_module_as_main
-    return _run_code(code, main_globals, None,
-           │         │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'mixtera.network.server', '__loader__': <_frozen_importlib_external....
-           │         └ <code object <module> at 0x40019c3a4030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
-           └ <function _run_code at 0x400019033d00>
-  File "/usr/lib/python3.10/runpy.py", line 86, in _run_code
-    exec(code, run_globals)
-         │     └ {'__name__': '__main__', '__doc__': None, '__package__': 'mixtera.network.server', '__loader__': <_frozen_importlib_external....
-         └ <code object <module> at 0x40019c3a4030, file "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entry...
-
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entrypoint.py", line 55, in <module>
-    main()
-    └ <function main at 0x40019c3ac280>
-
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/entrypoint.py", line 49, in main
-    server.run()
-    │      └ <function MixteraServer.run at 0x40019c3ac160>
-    └ <mixtera.network.server.server.MixteraServer object at 0x40019c387160>
-
-  File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/server.py", line 397, in run
-    asyncio.run(self._run_async())
-    │       │   │    └ <function MixteraServer._run_async at 0x40019c3ac0d0>
-    │       │   └ <mixtera.network.server.server.MixteraServer object at 0x40019c387160>
-    │       └ <function run at 0x40001904cdc0>
-    └ <module 'asyncio' from '/usr/lib/python3.10/asyncio/__init__.py'>
-
-  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
-    return loop.run_until_complete(main)
-           │    │                  └ <coroutine object MixteraServer._run_async at 0x40019bf8a490>
-           │    └ <function BaseEventLoop.run_until_complete at 0x4000197c37f0>
-           └ <_UnixSelectorEventLoop running=True closed=False debug=False>
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 636, in run_until_complete
-    self.run_forever()
-    │    └ <function BaseEventLoop.run_forever at 0x4000197c3760>
-    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 603, in run_forever
-    self._run_once()
-    │    └ <function BaseEventLoop._run_once at 0x4000197c92d0>
-    └ <_UnixSelectorEventLoop running=True closed=False debug=False>
-  File "/usr/lib/python3.10/asyncio/base_events.py", line 1909, in _run_once
-    handle._run()
-    │      └ <function Handle._run at 0x400019764ca0>
-    └ <Handle Task.task_wakeup(<Future finished result=None>)>
-  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
-    self._context.run(self._callback, *self._args)
-    │    │            │    │           │    └ <member '_args' of 'Handle' objects>
-    │    │            │    │           └ <Handle Task.task_wakeup(<Future finished result=None>)>
-    │    │            │    └ <member '_callback' of 'Handle' objects>
-    │    │            └ <Handle Task.task_wakeup(<Future finished result=None>)>
-    │    └ <member '_context' of 'Handle' objects>
-    └ <Handle Task.task_wakeup(<Future finished result=None>)>
-
-> File "/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera/mixtera/network/server/server.py", line 321, in _dispatch_client
-    raise RuntimeError(f"Unknown task id: {task_int}")
-
-RuntimeError: Unknown task id: None
-slurmstepd: error: *** JOB 121096 ON nid007353 CANCELLED AT 2025-01-30T01:07:02 ***
-slurmstepd: error: *** JOB 121095 ON nid005329 CANCELLED AT 2025-01-30T01:07:09 ***
-slurmstepd: error: *** JOB 121094 ON nid005249 CANCELLED AT 2025-01-30T01:07:13 ***

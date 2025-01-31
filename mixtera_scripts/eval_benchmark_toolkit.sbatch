@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=eval_benchmark_toolkit
-#SBATCH --output=./eval_benchmark_toolkit.log
-#SBATCH --error=./eval_benchmark_toolkit.err
+#SBATCH --output=./eval_benchmark_toolkit_coco50_vg25_text25.log
+#SBATCH --error=./eval_benchmark_toolkit_coco50_vg25_text25.err
 #SBATCH --partition=normal
 #SBATCH --environment=tinyllava
 #SBATCH --nodes=1
@@ -20,8 +20,8 @@ export TRITON_CACHE_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export HF_HOME=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export NUM_WORKERS=8
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune/checkpoint-5197"
-MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune"
+MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco50_vg25_text25-finetune/checkpoint-600"
+MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco50_vg25_text25-finetune"
 CONV_MODE=llama
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory

@@ -1,8 +1,0 @@
-2025-01-30 08:23:23.982 | INFO     | __main__:main:46 - Starting server, serving from directory /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_3
-2025-01-30 08:23:23.985 | DEBUG    | mixtera.core.client.mixtera_client:__init__:138 - Initialized current mixture id to -1.
-2025-01-30 08:23:23.987 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_load_db_from_disk:76 - Loading database from /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_3/mixtera.duckdb
-2025-01-30 08:23:24.225 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_load_db_from_disk:78 - Database loaded.
-2025-01-30 08:23:24.238 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
-2025-01-30 08:23:24.238 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
-2025-01-30 08:23:24.239 | DEBUG    | mixtera.core.query.query_cache:__init__:18 - Initializing QueryCache at /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_3/querycache
-2025-01-30 08:23:24.249 | INFO     | mixtera.network.server.server:_run_async:377 - Serving MixteraServer on ('172.28.33.188', 12345)

@@ -14,7 +14,7 @@
 source /iopsstor/scratch/cscs/tkerimog/tinyllama_env/bin/activate
 
 export MIXTERA_SERVER_ADDR=$(hostname)
-export MIXTERA_SERVER_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_4
+export MIXTERA_SERVER_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server
 export MIXTERA_SERVER_PORT=12345
 
 export PYTHON_SCRIPT=/iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/mixtera_scripts/register_dataset.py
