@@ -1,7 +1,8 @@
 #!/bin/bash
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-pretrain/checkpoint-2180"
-MODEL_NAME="TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-pretrain"
+MODEL_PATH=$1
+MODEL_NAME=$2
+CONV_MODE=$3
 EVAL_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval"
 
 python -m tinyllava.eval.model_vqa_mmmu \
@@ -10,7 +11,7 @@ python -m tinyllava.eval.model_vqa_mmmu \
     --image-folder $EVAL_DIR/MMMU/all_images \
     --answers-file $EVAL_DIR/MMMU/answers/$MODEL_NAME.jsonl \
     --temperature 0 \
-    --conv-mode phi
+    --conv-mode $CONV_MODE
 
 python scripts/convert_answer_to_mmmu.py \
     --answers-file $EVAL_DIR/MMMU/answers/$MODEL_NAME.jsonl \

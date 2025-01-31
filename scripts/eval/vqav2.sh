@@ -7,8 +7,9 @@ CHUNKS=${#GPULIST[@]}
 
 SPLIT="llava_vqav2_mscoco_test-dev2015"
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune/checkpoint-5197"
-MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune"
+MODEL_PATH=$1
+MODEL_NAME=$2
+CONV_MODE=$3
 EVAL_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
@@ -20,7 +21,7 @@ for IDX in $(seq 0 $((CHUNKS-1))); do
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
         --temperature 0 \
-        --conv-mode llama &
+        --conv-mode $CONV_MODE &
 done
 
 wait

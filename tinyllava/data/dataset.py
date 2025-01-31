@@ -159,15 +159,18 @@ class DataCollatorForSupervisedDataset(object):
 
         return batch
     
-def _get_mixtera_dataset(num_workers: int):
+def _get_mixtera_dataset():
     server_host = os.environ.get("MIXTERA_SERVER_ADDR", None)
     server_port = os.environ.get("MIXTERA_SERVER_PORT", None)
     job_id = os.environ.get("MIXTERA_JOB_ID", None)
     chunk_size = int(os.environ.get("MIXTERA_CHUNK_SIZE", 1024))
+    mixture = os.environ.get("MIXTERA_MIXTURE", None)
+    num_workers = int(os.environ.get("NUM_WORKERS", 8))
 
     assert server_host is not None, "MIXTERA_SERVER_ADDR must be set"
     assert server_port is not None, "MIXTERA_SERVER_PORT must be set"
     assert job_id is not None, "MIXTERA_JOB_ID must be set"
+    assert mixture is not None, "MIXTERA_MIXTURE must be set"
 
     # Get world information
     world_size, global_rank, local_rank = _get_distributed_info()
@@ -175,24 +178,28 @@ def _get_mixtera_dataset(num_workers: int):
     dp_groups = world_size
 
     client = MixteraClient.from_remote(host=server_host, port=int(server_port))
-    query = Query.for_job(job_id).select(None)
-    mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": ["gqa"]}): 0.5, 
-                                         MixtureKey({"dataset": ["textvqa"]}): 0.5})
+    query = Query.for_job(job_id).select(("dataset", "!=", "LLAVA_PRETRAIN"))
+
+    mixture_dict = json.loads(mixture)
+    if mixture_dict == {}:
+        mixture = ArbitraryMixture(chunk_size=chunk_size)
+    else:
+        mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": [dataset]}): weight for dataset, weight in mixture_dict.items()})
 
     print(f"Creating Mixtera dataset with {dp_groups} data parallel groups.")
 
     qea = QueryExecutionArgs(
         mixture=mixture,
         num_workers=num_workers,
-        dp_groups=world_size,
-        nodes_per_group=1,
+        dp_groups=1,
+        nodes_per_group=4,
     )
 
     rse = ResultStreamingArgs(
         job_id=job_id,
         tunnel_via_server=False,
-        dp_group_id=global_rank,  # Use global rank for DP group ID
-        node_id=0,
+        dp_group_id=0,  # Use global rank for DP group ID
+        node_id=global_rank,
     )
 
     return MixteraTorchDataset(client, query, qea, rse)
@@ -201,11 +208,16 @@ def _get_mixtera_dataset(num_workers: int):
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,
                                 data_args) -> Dict:
     """Make dataset and collator for supervised fine-tuning."""
-
-    train_dataset = MixteraLLaVaDataset(tokenizer=tokenizer,
-                                        data_path=data_args.data_path,
-                                        data_args=data_args,
-                                        dataset=_get_mixtera_dataset(8))
+    is_mixtera = os.environ.get("MIXTERA_SERVER_ADDR", None) is not None
+    if is_mixtera:
+        train_dataset = MixteraLLaVaDataset(tokenizer=tokenizer,
+                                            data_path=data_args.data_path,
+                                            data_args=data_args,
+                                            dataset=_get_mixtera_dataset())
+    else:
+        train_dataset = LazySupervisedDataset(data_path=data_args.data_path,
+                                            tokenizer=tokenizer,
+                                            data_args=data_args)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(train_dataset=train_dataset,
                 eval_dataset=None,

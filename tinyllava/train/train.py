@@ -12,6 +12,8 @@ from tinyllava.data.dataset import make_supervised_data_module
 
 IS_TOKENIZER_GREATER_THAN_0_14 = version.parse(tokenizers.__version__) >= version.parse('0.14')
 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 def load_settings(model_arguments, data_arguments, training_arguments):
     model_arguments.tune_type_connector = training_arguments.tune_type_connector

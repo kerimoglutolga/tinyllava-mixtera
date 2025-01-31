@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $# -ne 9 ]; then
+if [ $# -ne 11 ]; then
     echo "Usage: $0 <DATA_PATH> <IMAGE_PATH> <LLM_VERSION> <VT_VERSION> <VT_VERSION2> <CN_VERSION> <VERSION> <TRAIN_RECIPE> <MODEL_MAX_LENGTH>"
     exit 1
 fi
@@ -15,6 +15,8 @@ CN_VERSION="$6"
 VERSION="$7"
 TRAIN_RECIPE="$8"
 MODEL_MAX_LENGTH="$9"
+MAX_STEPS="${10}"
+NUM_WORKERS="${11}"
 
 VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
@@ -40,23 +42,26 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --tune_type_connector full \
     --output_dir /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
     --num_train_epochs 1 \
-    --per_device_train_batch_size 32 \
+    --per_device_train_batch_size 128 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 2 \
-    --evaluation_strategy "no" \
+    --eval_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 24000 \
+    --save_steps 500 \
     --save_total_limit 1 \
     --learning_rate 1e-3 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \
-    --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 False \
     --model_max_length $MODEL_MAX_LENGTH \
     --gradient_checkpointing True \
-    --dataloader_num_workers 8 \
+    --dataloader_num_workers $NUM_WORKERS \
     --lazy_preprocess True \
     --report_to wandb \
     --tokenizer_use_fast False \
-    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain
+    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
+    --lr_scheduler_type "cosine" \
+    --max_steps $MAX_STEPS \
+    --dispatch_batches True \
+    --split_batches True \

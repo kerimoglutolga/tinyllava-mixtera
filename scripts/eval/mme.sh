@@ -1,7 +1,8 @@
 #!/bin/bash
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-pretrain/checkpoint-2180"
-MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-pretrain"
+MODEL_PATH=$1
+MODEL_NAME=$2
+CONV_MODE=$3
 EVAL_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval"
 
 python -m tinyllava.eval.model_vqa_loader \
@@ -10,7 +11,7 @@ python -m tinyllava.eval.model_vqa_loader \
     --image-folder $EVAL_DIR/MME/MME_Benchmark_release_version \
     --answers-file $EVAL_DIR/MME/answers/$MODEL_NAME.jsonl \
     --temperature 0 \
-   --conv-mode llama
+    --conv-mode $CONV_MODE
 
 cd $EVAL_DIR/MME
 

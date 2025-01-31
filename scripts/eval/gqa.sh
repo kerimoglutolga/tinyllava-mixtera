@@ -6,11 +6,12 @@ IFS=',' read -ra GPULIST <<< "$gpu_list"
 CHUNKS=${#GPULIST[@]}
 
 SPLIT="llava_gqa_testdev_balanced"
-GQADIR="/home/ai/data/llava/dataset/eval/gqa"
+GQADIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval/gqa"
 
-MODEL_PATH="/mnt/data/sata/yinghu/checkpoints/llava_factory/tiny-llava-phi-2-siglip-so400m-patch14-384-base-finetune/"
-MODEL_NAME="tiny-llava-phi-2-siglip-so400m-patch14-384-base-finetune"
-EVAL_DIR="/home/ai/data/llava/dataset/eval"
+MODEL_PATH=$1
+MODEL_NAME=$2
+CONV_MODE=$3
+EVAL_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval"
 
 for IDX in $(seq 0 $((CHUNKS-1))); do
     CUDA_VISIBLE_DEVICES=${GPULIST[$IDX]} python -m tinyllava.eval.model_vqa_loader \
@@ -21,7 +22,7 @@ for IDX in $(seq 0 $((CHUNKS-1))); do
         --num-chunks $CHUNKS \
         --chunk-idx $IDX \
         --temperature 0 \
-        --conv-mode phi &
+        --conv-mode $CONV_MODE &
 done
 
 wait
@@ -39,5 +40,5 @@ done
 python scripts/convert_gqa_for_eval.py --src $output_file --dst $GQADIR/testdev_balanced_predictions.json
 
 cd $GQADIR
-python eval/eval.py --tier testdev_balanced
+python eval.py --tier testdev_balanced
 

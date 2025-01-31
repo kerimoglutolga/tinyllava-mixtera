@@ -1,7 +1,8 @@
 #!/bin/bash
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune/checkpoint-5197"
-MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-finetune"
+MODEL_PATH=$1
+MODEL_NAME=$2
+CONV_MODE=$3
 EVAL_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/data/eval"
 
 python -m tinyllava.eval.model_vqa_science \
@@ -11,7 +12,7 @@ python -m tinyllava.eval.model_vqa_science \
     --answers-file $EVAL_DIR/scienceqa/answers/$MODEL_NAME.jsonl \
     --single-pred-prompt \
     --temperature 0 \
-    --conv-mode llama
+    --conv-mode $CONV_MODE
 
 python tinyllava/eval/eval_science_qa.py \
     --base-dir $EVAL_DIR/scienceqa \

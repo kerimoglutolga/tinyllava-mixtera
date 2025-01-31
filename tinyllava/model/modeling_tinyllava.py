@@ -218,7 +218,7 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels,
         images, image_sizes=None
-    ):
+    ):  
         vision_tower = self.vision_tower
         if vision_tower is None or images is None or input_ids.shape[1] == 1:
             return input_ids, position_ids, attention_mask, past_key_values, None, labels
@@ -254,8 +254,12 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
         new_input_embeds = []
         new_labels = []
         cur_image_idx = 0
+
         for batch_idx, cur_input_ids in enumerate(input_ids):
             num_images = (cur_input_ids == IMAGE_TOKEN_INDEX).sum()
+            if num_images > 1:
+                raise ValueError("Only one image is allowed per sequence")
+            
             if num_images == 0:
                 cur_image_features = image_features[cur_image_idx]
                 cur_input_embeds_1 = self.language_model.get_input_embeddings()(cur_input_ids)

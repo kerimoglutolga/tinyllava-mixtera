@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ $# -ne 10 ]; then
+if [ $# -ne 13 ]; then
     echo "Usage: $0 <DATA_PATH> <IMAGE_PATH> <LLM_VERSION> <VT_VERSION> <VT_VERSION2> <CN_VERSION> <CONV_VERSION> <VERSION> <TRAIN_RECIPE> <MODEL_MAX_LENGTH>"
     exit 1
 fi
@@ -15,6 +15,9 @@ CONV_VERSION="$7"
 VERSION="$8"
 TRAIN_RECIPE="$9"
 MODEL_MAX_LENGTH="${10}"
+MAX_STEPS="${11}"
+NUM_WORKERS="${12}"
+PRETRAINED_MODEL_PATH="${13}"
 
 VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
@@ -39,15 +42,15 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --tune_vision_tower_from_layer 0 \
     --tune_type_connector full \
     --group_by_modality_length True \
-    --pretrained_model_path /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
-    --output_dir /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune-mixtera \
+    --pretrained_model_path ${PRETRAINED_MODEL_PATH} \
+    --output_dir /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune \
     --num_train_epochs 1 \
-    --per_device_train_batch_size 8 \
+    --per_device_train_batch_size 32 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 50000 \
+    --save_steps 500 \
     --save_total_limit 1 \
     --learning_rate 2e-5 \
     --weight_decay 0. \
@@ -61,6 +64,9 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --lazy_preprocess True \
     --report_to wandb \
     --tokenizer_use_fast False \
-    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune-mixtera \
+    --run_name tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune \
+    --dataloader_num_workers $NUM_WORKERS \
+    --max_steps $MAX_STEPS \
+    --dispatch_batches True \
     --split_batches True \
-    --max_steps 500
+
