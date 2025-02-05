@@ -1,0 +1,3 @@
+version: microsoft/phi-2 # huggingface model path
+conv_version: phi # chat template, other options are: phi, llama, gemmma, etc
+model_max_length: 3072 # max model input length

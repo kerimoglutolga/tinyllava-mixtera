@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=eval_image_question_answering
-#SBATCH --output=./eval_image_question_answering_coco50_vg40_text10.log
-#SBATCH --error=./eval_image_question_answering_coco50_vg40_text10.err
+#SBATCH --output=./eval_image_question_answering_mixtera-coco05_gqa01_ocrvqa04-finetune.log
+#SBATCH --error=./eval_image_question_answering_mixtera-coco05_gqa01_ocrvqa04-finetune.err
 #SBATCH --partition=normal
 #SBATCH --environment=tinyllava
 #SBATCH --nodes=1
@@ -20,8 +20,8 @@ export TRITON_CACHE_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export HF_HOME=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export NUM_WORKERS=8
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco50_vg40_text10-finetune/checkpoint-600"
-MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco50_vg40_text10-finetune"
+MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco05_gqa01_ocrvqa04-finetune/checkpoint-1386"
+MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco05_gqa01_ocrvqa04-finetune"
 CONV_MODE=llama
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory

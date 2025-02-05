@@ -1,0 +1,29 @@
+defaults:
+  - llm: tinyllama
+  - vision_tower: google_siglip
+  - connector: mlp
+  - mixture: llava_1
+
+
+data_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/blip_laion_cc_sbu_558k.json # pretrain annotation file path
+finetune_data_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/llava_v1_5_mix665k.json # finetune annotation file path
+image_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/llava/llava_pretrain/images # pretrain image dir
+finetune_image_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data #finetune image dir
+output_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs
+pretrained_model_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-pretrain
+
+
+mode: finetune
+max_steps: 10000
+num_workers: 8
+
+
+# Mixtera setup
+mixtera_server_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server
+mixtera_server_port: 12345
+mixtera_chunk_size: 512
+
+triton_cache_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
+hf_home: /iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
+tinyllava_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
+venv_path: /iopsstor/scratch/cscs/tkerimog/tinyllama_env

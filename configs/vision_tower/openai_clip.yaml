@@ -1,0 +1,1 @@
+version: openai/clip-vit-large-patch14-336 # huggingface model path

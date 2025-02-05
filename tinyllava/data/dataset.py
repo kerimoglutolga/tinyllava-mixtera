@@ -5,6 +5,7 @@ from typing import Dict,  Sequence, TYPE_CHECKING
 from PIL import Image, ImageFile
 import os
 
+from mixtera.core.query.mixture.inferring_mixture import InferringMixture
 from mixtera.core.query.mixture.mixture_key import MixtureKey
 from mixtera.core.query.mixture.static_mixture import StaticMixture
 from tinyllava.utils.train_utils import _get_distributed_info
@@ -166,6 +167,7 @@ def _get_mixtera_dataset():
     chunk_size = int(os.environ.get("MIXTERA_CHUNK_SIZE", 1024))
     mixture = os.environ.get("MIXTERA_MIXTURE", None)
     num_workers = int(os.environ.get("NUM_WORKERS", 8))
+    mode = os.environ.get("MIXTERA_MODE", "pretrain")
 
     assert server_host is not None, "MIXTERA_SERVER_ADDR must be set"
     assert server_port is not None, "MIXTERA_SERVER_PORT must be set"
@@ -178,14 +180,20 @@ def _get_mixtera_dataset():
     dp_groups = world_size
 
     client = MixteraClient.from_remote(host=server_host, port=int(server_port))
-    query = Query.for_job(job_id).select(("dataset", "!=", "LLAVA_PRETRAIN"))
-
-    mixture_dict = json.loads(mixture)
-    if mixture_dict == {}:
-        mixture = ArbitraryMixture(chunk_size=chunk_size)
+    
+    if mode == "pretrain":
+        query = Query(job_id).select(None)
+        mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": ["LLAVA_PRETRAIN"]}): 1.0})
     else:
-        mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": [dataset]}): weight for dataset, weight in mixture_dict.items()})
-
+        query = Query(job_id).select(("dataset", "!=", "LLAVA_PRETRAIN"))
+        mixture_dict = json.loads(mixture)
+        if mixture_dict == {}:
+            mixture = InferringMixture(chunk_size, strict=False)
+            print("Empty mixture, using inferring mixture.")
+        else:
+            mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": [dataset]}): weight for dataset, weight in mixture_dict.items()}, strict=False)
+            print(f"Using static mixture: {mixture}")
+            
     print(f"Creating Mixtera dataset with {dp_groups} data parallel groups.")
 
     qea = QueryExecutionArgs(

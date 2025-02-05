@@ -1,8 +1,4 @@
 #!/bin/bash
-if [ $# -ne 13 ]; then
-    echo "Usage: $0 <DATA_PATH> <IMAGE_PATH> <LLM_VERSION> <VT_VERSION> <VT_VERSION2> <CN_VERSION> <CONV_VERSION> <VERSION> <TRAIN_RECIPE> <MODEL_MAX_LENGTH>"
-    exit 1
-fi
 
 # Assign the arguments to variables
 DATA_PATH="$1"
@@ -18,6 +14,7 @@ MODEL_MAX_LENGTH="${10}"
 MAX_STEPS="${11}"
 NUM_WORKERS="${12}"
 PRETRAINED_MODEL_PATH="${13}"
+OUTPUT_DIR="${14}"
 
 VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
@@ -43,15 +40,15 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --tune_type_connector full \
     --group_by_modality_length True \
     --pretrained_model_path ${PRETRAINED_MODEL_PATH} \
-    --output_dir /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune \
+    --output_dir ${OUTPUT_DIR}/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune \
     --num_train_epochs 1 \
     --per_device_train_batch_size 32 \
     --per_device_eval_batch_size 4 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 500 \
-    --save_total_limit 1 \
+    --save_steps  5100 \
+    --save_total_limit 2 \
     --learning_rate 2e-5 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \

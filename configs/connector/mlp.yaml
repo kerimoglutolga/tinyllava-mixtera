@@ -1,0 +1,1 @@
+type: mlp2x_gelu # connector type, other options are: qformer, resampler, etc

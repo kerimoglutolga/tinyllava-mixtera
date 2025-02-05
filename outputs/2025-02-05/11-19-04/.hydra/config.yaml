@@ -1,0 +1,33 @@
+llm:
+  version: TinyLlama/TinyLlama-1.1B-Chat-v1.0
+  conv_version: llama
+  model_max_length: 2048
+vision_tower:
+  version: google/siglip-so400m-patch14-384
+connector:
+  type: mlp2x_gelu
+mixture:
+  name: llava_balanced
+  components:
+    coco: 0.2
+    vga: 0.2
+    ocr_vqa: 0.2
+    gqa: 0.2
+    text_vqa: 0.1
+    text: 0.1
+data_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/blip_laion_cc_sbu_558k.json
+finetune_data_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/llava_v1_5_mix665k.json
+image_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/llava/llava_pretrain/images
+finetune_image_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data
+output_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs
+pretrained_model_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-pretrain
+mode: finetune
+max_steps: 10000
+num_workers: 8
+mixtera_server_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server
+mixtera_server_port: 12345
+mixtera_chunk_size: 512
+triton_cache_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
+hf_home: /iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
+tinyllava_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
+venv_path: /iopsstor/scratch/cscs/tkerimog/tinyllama_env
