@@ -86,7 +86,7 @@ def run_experiment(cfg: DictConfig):
 
     # Determine which training script to use.
     train_script = (
-        "/scripts/train/finetune.sh" if mode == "finetune" else "/scripts/train/train.sh"
+        "scripts/train/finetune.sh" if mode == "finetune" else "scripts/train/train.sh"
     )
     run_cmd = f"\nbash {train_script} "
 

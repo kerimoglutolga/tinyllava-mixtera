@@ -1,0 +1,9 @@
+2025-02-05 11:26:54.885 | INFO     | __main__:main:46 - Starting server, serving from directory /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs/tinyllava-finetune-mixture_llava_balanced-steps_10000-workers_8-chunksize_512/mixtera_server_copy
+2025-02-05 11:26:54.887 | DEBUG    | mixtera.core.client.mixtera_client:__init__:139 - Initialized current mixture id to -1.
+2025-02-05 11:26:54.889 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_load_db_from_disk:76 - Loading database from /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs/tinyllava-finetune-mixture_llava_balanced-steps_10000-workers_8-chunksize_512/mixtera_server_copy/mixtera.duckdb
+2025-02-05 11:26:54.938 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_load_db_from_disk:78 - Database loaded.
+2025-02-05 11:26:54.951 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:123 - Vacuuming the DuckDB.
+2025-02-05 11:26:54.952 | INFO     | mixtera.core.datacollection.mixtera_data_collection:_vacuum:125 - Vacuumd.
+2025-02-05 11:26:54.952 | DEBUG    | mixtera.core.query.query_cache:__init__:18 - Initializing QueryCache at /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs/tinyllava-finetune-mixture_llava_balanced-steps_10000-workers_8-chunksize_512/mixtera_server_copy/querycache
+2025-02-05 11:26:54.962 | INFO     | mixtera.network.server.server:_run_async:379 - Serving MixteraServer on ('172.28.15.20', 12345)
+bash: /scripts/train/finetune.sh: No such file or directory
