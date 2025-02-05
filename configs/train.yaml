@@ -1,5 +1,5 @@
 defaults:
-  - llm: tinyllama
+  - llm: phi
   - vision_tower: google_siglip
   - connector: mlp
   - mixture: llava_1
@@ -10,11 +10,11 @@ finetune_data_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/ll
 image_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data/llava/llava_pretrain/images # pretrain image dir
 finetune_image_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/data #finetune image dir
 output_dir: /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs
-pretrained_model_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-pretrain
+pretrained_model_path: /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-phi-2-siglip-so400m-patch14-384-mixtera-phi-pretrain
 
 
 mode: finetune
-max_steps: 10000
+max_steps: 2000
 num_workers: 8
 
 

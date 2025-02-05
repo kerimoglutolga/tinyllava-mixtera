@@ -1,0 +1,8 @@
+name: llava_balanced_4
+components:
+  coco: 0.2
+  ocr_vqa: 0.3
+  gqa: 0.2
+  textvqa: 0.1
+  text: 0.2
+

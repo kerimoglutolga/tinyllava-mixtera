@@ -69,6 +69,7 @@ def run_experiment(cfg: DictConfig):
         f"export MIXTERA_CHUNK_SIZE={mixtera_chunk_size}\n"
         f"export MIXTERA_MODE={mode}\n"
         f"export MIXTERA_MIXTURE='{json.dumps(dict(mixture.components))}'\n"
+        f"export MIXTERA_JOB_ID={job_name}\n"
         f"export NUM_WORKERS={num_workers}\n"
         f"export TRITON_CACHE_DIR={cfg.triton_cache_dir}\n"
         f"export HF_HOME={cfg.hf_home}\n"
@@ -101,7 +102,7 @@ def run_experiment(cfg: DictConfig):
         raise NotImplementedError("Pretraining is not yet supported.")
 
     # Combine all parts to form the complete script.
-    script_content = sbatch_header + env_var_lines + run_mixtera_server_cmd + run_cmd
+    script_content = sbatch_header + env_var_lines + change_dir_cmd + run_mixtera_server_cmd + run_cmd
 
     # Write the script content to a temporary .sbatch file.
     sbatch_file_path = f"./{time.time()}.sbatch"
