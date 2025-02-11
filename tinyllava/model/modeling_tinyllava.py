@@ -15,13 +15,38 @@ from .configuration_tinyllava import TinyLlavaConfig
 from ..utils.constants import *
 # from tinyllava.utils.data_utils import get_value_from_kwargs
 
+@dataclass
+class CausalLMOutputWithDomainIDs(CausalLMOutputWithPast):
+    domain_ids: Optional[torch.FloatTensor] = None
+    pertoken_loss: Optional[torch.FloatTensor] = None
+    reference_pertoken_loss: Optional[torch.FloatTensor] = None 
+    token_mask: Optional[torch.FloatTensor] = None 
+
 def get_value_from_kwargs(kwargs, name):
     if name in kwargs:
         return kwargs.pop(name)
     else:
         return None
-    
 
+def causal_lm_per_token_loss(logits, labels, vocab_size: int, ignore_index: int = -100):
+    # Upcast to float if we need to compute the loss to avoid potential precision issues
+    logits = logits.float()
+    labels = labels.to(logits.device)
+
+    # Shift so that tokens < n predict n
+    shift_logits = logits[..., :-1, :].contiguous()
+    shift_labels = labels[..., 1:].contiguous()
+
+    # Flatten the tokens
+    shift_logits = shift_logits.view(-1, vocab_size)
+    shift_labels = shift_labels.view(-1)
+
+    # Enable model parallelism
+    shift_labels = shift_labels.to(shift_logits.device)
+    token_mask = shift_labels.ne(ignore_index).long()
+
+    loss = nn.functional.cross_entropy(shift_logits, shift_labels, ignore_index=ignore_index, reduction="none")
+    return loss, token_mask
 
 class TinyLlavaPreTrainedModel(PreTrainedModel):
     config_class = TinyLlavaConfig
@@ -119,6 +144,8 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
         images: Optional[torch.FloatTensor] = None,
         image_sizes: Optional[List[List[int]]] = None,
         return_dict: Optional[bool] = None,
+        domain_ids: Optional[torch.FloatTensor] = None,
+        return_pertoken_losses: bool = False,
     ) -> Union[Tuple, CausalLMOutputWithPast]:
         use_cache = use_cache if use_cache is not None else self.config.use_cache
         if inputs_embeds is None:
@@ -138,7 +165,8 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
                 images,
                 image_sizes
             )
-        return self.language_model.forward(
+        
+        llm_output: CausalLMOutputWithPast = self.language_model.forward(
             input_ids=input_ids,
             attention_mask=attention_mask,
             position_ids=position_ids,
@@ -150,6 +178,22 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
             output_hidden_states=output_hidden_states,
             return_dict=return_dict
         )
+
+        if return_pertoken_losses:
+            # Compute per-token loss
+            pertoken_loss, token_mask = causal_lm_per_token_loss(llm_output.logits, labels, self.language_model.vocab_size, ignore_index=IGNORE_INDEX)
+
+            return CausalLMOutputWithDomainIDs(
+                **llm_output,
+                domain_ids=domain_ids,
+                pertoken_loss=pertoken_loss,
+                token_mask=token_mask,
+            )
+
+        else:
+            return llm_output
+
+
     
     @torch.no_grad()
     def generate(
@@ -218,7 +262,7 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, position_ids, attention_mask, past_key_values, labels,
         images, image_sizes=None
-    ):  
+    ):
         vision_tower = self.vision_tower
         if vision_tower is None or images is None or input_ids.shape[1] == 1:
             return input_ids, position_ids, attention_mask, past_key_values, None, labels
@@ -254,12 +298,8 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
         new_input_embeds = []
         new_labels = []
         cur_image_idx = 0
-
         for batch_idx, cur_input_ids in enumerate(input_ids):
             num_images = (cur_input_ids == IMAGE_TOKEN_INDEX).sum()
-            if num_images > 1:
-                raise ValueError("Only one image is allowed per sequence")
-            
             if num_images == 0:
                 cur_image_features = image_features[cur_image_idx]
                 cur_input_embeds_1 = self.language_model.get_input_embeddings()(cur_input_ids)
@@ -381,8 +421,4 @@ class TinyLlavaForConditionalGeneration(TinyLlavaPreTrainedModel):
         
     def load_connector(self, **kwargs):
         self.connector.load_model(**kwargs)
-
             
-
-        
-        

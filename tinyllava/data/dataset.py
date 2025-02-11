@@ -27,6 +27,15 @@ from mixtera.torch import MixteraTorchDataset
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+DOMAINS_TO_INT = {
+    "coco": 0,
+    "vg": 1,
+    "gqa": 2,
+    "ocr_vqa": 3,
+    "textvqa": 4,
+    "text": 5
+}
+
 class LazySupervisedDataset(Dataset):
     """Dataset for supervised fine-tuning."""
 
@@ -98,8 +107,9 @@ class MixteraLLaVaDataset(IterableDataset):
         self.image_preprocess = ImagePreprocess(data_args.image_processor, data_args)
 
     def __iter__(self):
-        for sample in self.dataset:
+        for key_id, sample in self.dataset:
             data_dict = self.text_preprocess(copy.deepcopy(sample["conversations"]))
+            data_dict["key_id"] = key_id
             if 'image' in sample :
                 image_path = sample["image_path"]
                 if not os.path.exists(image_path):
@@ -158,6 +168,9 @@ class DataCollatorForSupervisedDataset(object):
             else:
                 batch['images'] = images
 
+        key_ids = [instance["key_id"] for instance in instances]
+        batch["domain_ids"] = torch.Tensor(key_ids).long()
+
         return batch
     
 def _get_mixtera_dataset():
@@ -191,7 +204,8 @@ def _get_mixtera_dataset():
             mixture = InferringMixture(chunk_size, strict=False)
             print("Empty mixture, using inferring mixture.")
         else:
-            mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": [dataset]}): weight for dataset, weight in mixture_dict.items()}, strict=False)
+            total_weight = sum(mixture_dict.values())
+            mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": [dataset]}): weight / total_weight for dataset, weight in mixture_dict.items()}, strict=False)
             print(f"Using static mixture: {mixture}")
             
     print(f"Creating Mixtera dataset with {dp_groups} data parallel groups.")
@@ -210,7 +224,7 @@ def _get_mixtera_dataset():
         node_id=global_rank,
     )
 
-    return MixteraTorchDataset(client, query, qea, rse)
+    return MixteraTorchDataset(client, query, qea, rse, return_key_id=True)
 
 
 def make_supervised_data_module(tokenizer: transformers.PreTrainedTokenizer,

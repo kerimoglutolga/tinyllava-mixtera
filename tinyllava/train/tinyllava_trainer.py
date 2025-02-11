@@ -15,6 +15,8 @@ from transformers.trainer import (
 )
 from typing import List, Optional
 
+import wandb
+
 from ..utils.train_utils import *
 
 
@@ -118,7 +120,6 @@ class LengthGroupedSampler(Sampler):
 
 
 class LLaVATrainer(Trainer):
-
     def _get_train_sampler(self) -> Optional[torch.utils.data.Sampler]:
         if self.train_dataset is None or not has_length(self.train_dataset):
             return None
@@ -225,7 +226,233 @@ class LLaVATrainer(Trainer):
                 logger.info(f"skipped: {skipped/2**20}M params")
 
         return self.optimizer
+    
 
+class DoReMiTrainer(LLaVATrainer):
+    def __init__(self, doremi_args, *args, **kwargs):
+        LLaVATrainer.__init__(self, *args, **kwargs)
 
+        self.num_domains = doremi_args.num_domains
+        self.reweight_eta = doremi_args.reweight_eta
+        self.reweight_eps = doremi_args.reweight_eps
 
+        self.train_domain_weights_dict = {i: 1.0 / self.num_domains for i in range(self.num_domains)}
+        self.domain_list = list(sorted(self.train_domain_weights_dict.keys()))
+        self.sampling_weights = torch.tensor([self.train_domain_weights_dict[domain] for domain in self.domain_list])
+
+        self.pertoken_scores = []
+        self.token_masks = []
+        self.domain_ids = []
+
+    def write_weights(self, weights):
+        self.model.update_counter += 1
+        self.model.train_domain_weights[:] = weights.float()
+        self.model.avg_domain_weights[:] = (self.model.avg_domain_weights * (self.model.update_counter - 1) + weights) / self.model.update_counter
+
+    def read_weights(self):
+        return self.model.train_domain_weights.clone()
+
+    def set_attributes(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+    def update_domain_weights(self, scores, scores_mask, domain_ids):
+        wandb_log_dict = {}
+        train_domain_weights = self.read_weights()
+
+        scores = scores.detach()
+        domain_ids = domain_ids.detach()
+
+        perdomain_scores = []
+        for domain_id in range(len(train_domain_weights)):
+            domain_mask = (domain_ids == domain_id)
+            perdomain_scores_mask = scores_mask[domain_mask]
+
+            if domain_mask.sum() > 0:
+                curr_domain_scores = torch.clip(scores[domain_mask], min=0).mean()
+            else:
+                curr_domain_scores = self.model.perdomain_scores[domain_id]
+            perdomain_scores.append(curr_domain_scores)
+
+        self.model.perdomain_scores[:] = torch.tensor(perdomain_scores).float()
+        log_new_train_domain_weights = torch.log(train_domain_weights) + self.reweight_eta * self.model.perdomain_scores
+        log_new_train_domain_weights = log_new_train_domain_weights - torch.logsumexp(log_new_train_domain_weights, dim=0)
+        train_domain_weights = (1-self.reweight_eps) * torch.exp(log_new_train_domain_weights) + self.reweight_eps / len(log_new_train_domain_weights)
+        self.write_weights(train_domain_weights)
+
+        for domain_idx in range(len(train_domain_weights)):
+            domain_name = self.domain_list[domain_idx]
+            wandb_log_dict[f'avg_domain_weights/{domain_name}'] = self.model.avg_domain_weights[domain_idx].item()
+            wandb_log_dict[f'train_domain_weights/{domain_name}'] = self.model.train_domain_weights[domain_idx].item()
+            wandb_log_dict[f'perdomain_scores/{domain_name}'] = self.model.perdomain_scores[domain_idx].item()
+        wandb_log_dict['max_domain_id'] = domain_ids.max().item()
+        wandb.log(wandb_log_dict, commit=False)
+
+    def training_step(self, model, inputs, num_items_in_batch=None):
+        model.train()
+        inputs = self._prepare_inputs(inputs)
+        # domain_ids is expected to be [batch_size]
+        domain_ids = inputs["domain_ids"]
+        batch_size = domain_ids.size(0)  # e.g., 8
+
+        with self.compute_loss_context_manager():
+            loss, outputs = self.compute_loss(model, inputs, return_outputs=True)
+            # Assume outputs.pertoken_loss is a flat tensor over all tokens.
+            # Compute sequence length per sample.
+            seq_length = outputs.pertoken_loss.numel() // batch_size  # e.g. 7056 // 8 = 882 tokens per sample
+            pertoken_loss = outputs.pertoken_loss
+            reference_pertoken_loss = outputs.reference_pertoken_loss
+            token_mask = outputs.token_mask
+            excess_loss = pertoken_loss - reference_pertoken_loss
+
+        # Expand domain_ids from [batch_size] to [batch_size * seq_length]:
+        domain_ids = domain_ids.unsqueeze(1).repeat(1, seq_length).view(-1)
+
+        # -----------------------
+        # Distributed gathering with padding for variable lengths
+        # -----------------------
+        # Determine local lengths (they may be different on each process)
+        local_excess_len = torch.tensor([excess_loss.numel()], device=excess_loss.device)
+        local_token_mask = torch.tensor([token_mask.numel()], device=token_mask.device)
+        local_domain_len = torch.tensor([domain_ids.numel()], device=domain_ids.device)
+
+        # Create lists to hold lengths from all processes.
+        # Make sure the dtype matches local_excess_len and local_domain_len.
+        excess_lens_list = [
+            torch.zeros(1, device=excess_loss.device, dtype=local_excess_len.dtype)
+            for _ in range(self.args.world_size)
+        ]
+        domain_lens_list = [
+            torch.zeros(1, device=domain_ids.device, dtype=local_domain_len.dtype)
+            for _ in range(self.args.world_size)
+        ]
+        token_mask_lens_list = [
+            torch.zeros(1, device=token_mask.device, dtype=local_token_mask.dtype)
+            for _ in range(self.args.world_size)
+        ]
+
+        # Gather lengths from all processes.
+        dist.all_gather(excess_lens_list, local_excess_len)
+        dist.all_gather(domain_lens_list, local_domain_len)
+        dist.all_gather(token_mask_lens_list, local_token_mask)
+
+        # Convert gathered lengths to Python ints.
+        excess_lens = [int(t.item()) for t in excess_lens_list]
+        domain_lens = [int(t.item()) for t in domain_lens_list]
+        token_mask_lens = [int(t.item()) for t in token_mask_lens_list]
+
+        # Determine maximum lengths across all processes.
+        max_excess_len = max(excess_lens)
+        max_domain_len = max(domain_lens)
+        max_token_mask_len = max(token_mask_lens)
+
+        # Pad excess_loss and domain_ids to the maximum length if needed.
+        if excess_loss.numel() < max_excess_len:
+            pad_size = max_excess_len - excess_loss.numel()
+            excess_loss_padded = torch.nn.functional.pad(excess_loss, (0, pad_size))
+        else:
+            excess_loss_padded = excess_loss
+
+        if domain_ids.numel() < max_domain_len:
+            pad_size = max_domain_len - domain_ids.numel()
+            domain_ids_padded = torch.nn.functional.pad(domain_ids, (0, pad_size))
+        else:
+            domain_ids_padded = domain_ids
+        
+        if token_mask.numel() < max_token_mask_len:
+            pad_size = max_token_mask_len - token_mask.numel()
+            token_mask_padded = torch.nn.functional.pad(token_mask, (0, pad_size))
+        else:
+            token_mask_padded = token_mask
+
+        # Gather the padded tensors from all processes.
+        if self.is_local_process_zero():
+            gathered_excess_list = [
+                torch.zeros(max_excess_len, device=excess_loss.device, dtype=excess_loss.dtype)
+                for _ in range(self.args.world_size)
+            ]
+            gathered_domain_list = [
+                torch.zeros(max_domain_len, device=domain_ids.device, dtype=domain_ids.dtype)
+                for _ in range(self.args.world_size)
+            ]
+            gathered_token_mask_list = [
+                torch.zeros(max_token_mask_len, device=token_mask.device, dtype=token_mask.dtype)
+                for _ in range(self.args.world_size)
+            ]
+
+            dist.all_gather(gathered_excess_list, excess_loss_padded)
+            dist.all_gather(gathered_domain_list, domain_ids_padded)
+            dist.all_gather(gathered_token_mask_list, token_mask_padded)
+
+            # Trim each gathered tensor to its valid length.
+            gathered_excess_losses = []
+            gathered_domain_ids = []
+            gathered_token_masks = []
+
+            for i in range(self.args.world_size):
+                valid_excess = gathered_excess_list[i][:excess_lens[i]]
+                valid_domain = gathered_domain_list[i][:domain_lens[i]]
+                valid_token_mask = gathered_token_mask_list[i][:token_mask_lens[i]]
+                gathered_excess_losses.append(valid_excess)
+                gathered_domain_ids.append(valid_domain)
+                gathered_token_masks.append(valid_token_mask)
+
+            gathered_excess_losses = torch.cat(gathered_excess_losses, dim=0)
+            gathered_domain_ids = torch.cat(gathered_domain_ids, dim=0)
+            gathered_token_masks = torch.cat(gathered_token_masks, dim=0)
+
+            self.pertoken_scores.append(gathered_excess_losses.detach())
+            self.domain_ids.append(gathered_domain_ids.detach())
+            self.token_masks.append(gathered_token_masks.detach())
+
+                
+            if len(self.pertoken_scores) == self.args.gradient_accumulation_steps:
+                pertoken_scores = torch.cat(self.pertoken_scores, dim=0)
+                domain_ids_all = torch.cat(self.domain_ids, dim=0)
+                token_masks_all = torch.cat(self.token_masks, dim=0)
+
+                # Update domain weights using the gathered per-token scores and domain IDs.
+                self.update_domain_weights(pertoken_scores, token_masks_all, domain_ids_all)
+
+                # Reset accumulators.
+                self.pertoken_scores = []
+                self.domain_ids = []
+                self.token_masks = []
+        else:
+            # For non-zero ranks, still participate in the all_gather.
+            dummy_excess = torch.zeros(max_excess_len, device=excess_loss.device, dtype=excess_loss.dtype)
+            dummy_domain = torch.zeros(max_domain_len, device=domain_ids.device, dtype=domain_ids.dtype)
+            dummy_token_mask = torch.zeros(max_token_mask_len, device=token_mask.device, dtype=token_mask.dtype)
+            dummy_excess_list = [dummy_excess.clone() for _ in range(self.args.world_size)]
+            dummy_domain_list = [dummy_domain.clone() for _ in range(self.args.world_size)]
+            dummy_token_mask_list = [dummy_token_mask.clone() for _ in range(self.args.world_size)]
+            dist.all_gather(dummy_excess_list, excess_loss_padded)
+            dist.all_gather(dummy_domain_list, domain_ids_padded)
+            dist.all_gather(dummy_token_mask_list, token_mask_padded)
+
+        # -----------------------
+        # Reweighted loss computation (local branch)
+        # -----------------------
+        # Read current domain weights (assumed to be a tensor of shape [num_domains]).
+        train_domain_weights = self.read_weights().to(pertoken_loss.device).float()
+
+        # Adjust domain weights if doing non-uniform sampling.
+        train_domain_weights = train_domain_weights / self.sampling_weights.to(train_domain_weights.device)
+        train_domain_weights = train_domain_weights / train_domain_weights.sum()
+
+        # Use the local domain_ids (expanded to [batch_size * seq_length]) to index into domain weights.
+        curr_domain_weights = train_domain_weights[domain_ids].expand_as(pertoken_loss).detach()
+
+        # Renormalize: compute a normalizer across tokens.
+        normalizer = curr_domain_weights.detach().sum()
+        # Gather normalizer across GPUs.
+        dist.all_reduce(normalizer, op=torch.distributed.ReduceOp.SUM)
+        normalizer = torch.clip(normalizer, min=1e-10) / self.args.world_size
+
+        # Compute the final weighted loss.
+        loss = (pertoken_loss * curr_domain_weights.detach()).sum() / normalizer
+        loss = loss.mean()  # Average the loss for multi-GPU training.
+
+        loss = self.deepspeed.backward(loss)
+        return loss
 

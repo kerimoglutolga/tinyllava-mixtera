@@ -1,8 +1,9 @@
 #!/bin/bash
 
+#SBATCH --account=a-a09
 #SBATCH --job-name=eval_benchmark_toolkit
-#SBATCH --output=./eval_benchmark_toolkit_mixtera-coco05_gqa01_ocrvqa04-finetune.log
-#SBATCH --error=./eval_benchmark_toolkit_mixtera-coco05_gqa01_ocrvqa04-finetune.err
+#SBATCH --output=./eval_benchmark_toolkit_mixtera-finetune.log
+#SBATCH --error=./eval_benchmark_toolkit_mixtera-finetune.err
 #SBATCH --partition=normal
 #SBATCH --environment=tinyllava
 #SBATCH --nodes=1
@@ -20,9 +21,9 @@ export TRITON_CACHE_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export HF_HOME=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export NUM_WORKERS=8
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco05_gqa01_ocrvqa04-finetune/checkpoint-1386"
-MODEL_NAME="tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-coco05_gqa01_ocrvqa04-finetune"
-CONV_MODE=llama
+MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs/tinyllava-finetune-mixture_llava_balanced-steps_2000-workers_8-chunksize_512/tiny-llava-phi-2-siglip-so400m-patch14-384-mixtera_llava_balanced-finetune/checkpoint-2000"
+MODEL_NAME="tiny-llava-phi-2-siglip-so400m-patch14-384-mixtera_llava_balanced-finetune"
+CONV_MODE=phi
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
 

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#SBATCH --account=a-a09
 #SBATCH --job-name=register_llava
 #SBATCH --output=./register_llava_output.log
 #SBATCH --error=./register_llava_output.err
@@ -17,7 +18,7 @@ export MIXTERA_SERVER_ADDR=$(hostname)
 export MIXTERA_SERVER_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server
 export MIXTERA_SERVER_PORT=12345
 
-export PYTHON_SCRIPT=/iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/mixtera_scripts/register_dataset.py
+export PYTHON_SCRIPT=/iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/register_dataset.py
 
 /iopsstor/scratch/cscs/tkerimog/tinyllama_env/bin/python -u -m mixtera.network.server.entrypoint \
     $MIXTERA_SERVER_DIR \

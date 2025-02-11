@@ -2,8 +2,8 @@
 
 #SBATCH --account=a-a09
 #SBATCH --job-name=mixtera_finetune
-#SBATCH --output=./finetune_test_epoch.log
-#SBATCH --error=./finetune_test_epoch.err
+#SBATCH --output=./finetune_uniform.log
+#SBATCH --error=./finetune_uniform.err
 #SBATCH --partition=normal
 #SBATCH --environment=tinyllava
 #SBATCH --nodes=1
@@ -11,18 +11,18 @@
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-task=72
 #SBATCH --mem=460000
-#SBATCH --time=05:59:00
+#SBATCH --time=10:00:00
 
 # Must have TinyLLaVA and Mixtera installed in the environment with all requirements
 source /iopsstor/scratch/cscs/tkerimog/tinyllama_env/bin/activate
 
 # Mixtera configuration
 export MIXTERA_SERVER_ADDR=$(hostname)
-export MIXTERA_SERVER_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server
+export MIXTERA_SERVER_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/mixtera_server_2
 export MIXTERA_SERVER_PORT=12345
 export MIXTERA_JOB_ID="mixtera_tinyllava_$(date +'%Y%m%d_%H%M%S')" 
 export MIXTERA_CHUNK_SIZE=512 # 4 * global_batch_size as a heuristic
-export MIXTERA_MIXTURE='{"textvqa": 1.0}'  
+export MIXTERA_MIXTURE='{"coco": 1, "gqa": 1, "ocr_vqa": 1, "text": 1, "textvqa": 1, "vg": 1}'  
 export MIXTERA_MODE='finetune'
 
 # Start Mixtera server
@@ -40,18 +40,19 @@ export NUM_WORKERS=8
 
 FINETUNE_DATA_PATH=/iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/llava_v1_5_mix665k.json # finetune annotation file path
 FINETUNE_IMAGE_PATH=/iopsstor/scratch/cscs/tkerimog/tinyllava/data # finetune image dir
-LLM_VERSION=TinyLlama/TinyLlama-1.1B-Chat-v1.0 # llm path in huggingface
+LLM_VERSION=TinyLlama/TinyLlama-1.1B-Chat-v1.0  # llm path in huggingface
 VT_VERSION=google/siglip-so400m-patch14-384 # vision tower path in huggingface
 VT_VERSION2="" # if you are not using mof vision tower, keep it empty
 CN_VERSION=mlp2x_gelu # connector type, other options are: qformer, resampler, etc
 CONV_VERSION=llama #chat template, other options are: phi, llama, gemmma, etc
-VERSION=mixtera # experiment name for recording different runnings
+VERSION=mixtera-uniform # experiment name for recording different runnings
 TRAIN_RECIPE=common # training recipes, other options are: lora, qlora
 MODEL_MAX_LENGTH=2048
-MAX_STEPS=6000 # number of update steps for training i.e. batch_size * gradient_accumulation_steps samples will be processed per step
-PRETRAINED_MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-mixtera-pretrain"
+MAX_STEPS=5000 # number of update steps for training i.e. batch_size * gradient_accumulation_steps samples will be processed per step
+PRETRAINED_MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-TinyLlama-1.1B-Chat-v1.0-siglip-so400m-patch14-384-base-pretrain"
+OUTPUT_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava"
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
 
 bash scripts/train/finetune.sh "$FINETUNE_DATA_PATH" "$FINETUNE_IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$CONV_VERSION" "$VERSION" \
-"$TRAIN_RECIPE" "$MODEL_MAX_LENGTH" "$MAX_STEPS" "$NUM_WORKERS" "$PRETRAINED_MODEL_PATH"
+"$TRAIN_RECIPE" "$MODEL_MAX_LENGTH" "$MAX_STEPS" "$NUM_WORKERS" "$PRETRAINED_MODEL_PATH" "$OUTPUT_DIR"

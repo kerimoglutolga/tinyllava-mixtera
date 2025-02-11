@@ -1,0 +1,9 @@
+name: uniform
+components:
+  coco: 1
+  ocr_vqa: 1
+  gqa: 1
+  textvqa: 1
+  text: 1
+  vg: 1
+

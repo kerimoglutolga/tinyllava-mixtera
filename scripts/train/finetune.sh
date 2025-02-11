@@ -20,7 +20,7 @@ VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
 
 deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.py \
-    --deepspeed ./scripts/zero2.json \
+    --deepspeed ./scripts/zero3.json \
     --data_path  $DATA_PATH \
     --image_folder $IMAGE_PATH \
     --is_multimodal True \
@@ -40,7 +40,7 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --tune_type_connector full \
     --group_by_modality_length True \
     --pretrained_model_path ${PRETRAINED_MODEL_PATH} \
-    --output_dir ${OUTPUT_DIR}/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-finetune \
+    --output_dir ${OUTPUT_DIR} \
     --num_train_epochs 1 \
     --per_device_train_batch_size 32 \
     --per_device_eval_batch_size 4 \
@@ -49,10 +49,10 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --save_strategy "steps" \
     --save_steps  5100 \
     --save_total_limit 2 \
-    --learning_rate 2e-5 \
+    --learning_rate 1e-3 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \
-    --lr_scheduler_type "cosine" \
+    --lr_scheduler_type "constant" \
     --logging_steps 1 \
     --tf32 False \
     --model_max_length $MODEL_MAX_LENGTH \
@@ -66,4 +66,9 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --max_steps $MAX_STEPS \
     --dispatch_batches True \
     --split_batches True \
+    --use_doremi False \
+    --reference_model_path /iopsstor/scratch/cscs/tkerimog/tinyllava/finetune \
+    --num_domains 6 \
+    --reweight_eta 1 \
+    --reweight_eps 1e-5 \
 
