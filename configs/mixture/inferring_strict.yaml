@@ -1,0 +1,4 @@
+name: inferring_strict
+components:
+type: strict
+

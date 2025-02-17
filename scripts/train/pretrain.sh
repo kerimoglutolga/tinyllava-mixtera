@@ -17,8 +17,8 @@ OUTPUT_DIR="${12}"
 VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
 
-deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.py \
-    --deepspeed ./scripts/zero2.json \
+deepspeed --include localhost:0 --master_port 29501 tinyllava/train/train.py \
+    --deepspeed ./scripts/zero3.json \
     --data_path  $DATA_PATH\
     --image_folder $IMAGE_PATH \
     --is_multimodal True \
@@ -36,7 +36,7 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --tune_type_vision_tower frozen \
     --tune_vision_tower_from_layer 0 \
     --tune_type_connector full \
-    --output_dir ${OUTPUT_DIR}/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
+    --output_dir /iopsstor/scratch/cscs/tkerimog/tinyllava/tiny-llava-${LLM_VARIANT}-${VT_VARIANT}-${VERSION}-pretrain \
     --num_train_epochs 1 \
     --per_device_train_batch_size 128 \
     --per_device_eval_batch_size 4 \
@@ -61,4 +61,3 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --max_steps $MAX_STEPS \
     --dispatch_batches True \
     --split_batches True \
-    --use_doremi False \

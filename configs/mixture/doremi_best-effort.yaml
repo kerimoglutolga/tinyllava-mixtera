@@ -1,0 +1,10 @@
+name: doremi_best-effort
+components:
+  coco: 0.05
+  ocr_vqa: 0.67
+  gqa: 0.1
+  textvqa: 0.1
+  text: 0.04
+  vg: 0.04
+type: best-effort
+

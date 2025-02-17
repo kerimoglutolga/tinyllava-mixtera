@@ -1,0 +1,9 @@
+components:
+  coco: 0.25517560319973637
+  gqa: 0.0533465716657173
+  ocr_vqa: 0.07767588465044148
+  text: 0.2887080717964628
+  textvqa: 0.05153240945997533
+  vg: 0.2735614592276668
+name: mix_107_best-effort
+type: best-effort

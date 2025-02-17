@@ -168,9 +168,6 @@ class DataCollatorForSupervisedDataset(object):
             else:
                 batch['images'] = images
 
-        key_ids = [instance["key_id"] for instance in instances]
-        batch["domain_ids"] = torch.Tensor(key_ids).long()
-
         return batch
     
 def _get_mixtera_dataset():
@@ -181,6 +178,7 @@ def _get_mixtera_dataset():
     mixture = os.environ.get("MIXTERA_MIXTURE", None)
     num_workers = int(os.environ.get("NUM_WORKERS", 8))
     mode = os.environ.get("MIXTERA_MODE", "pretrain")
+    mixture_type = os.environ.get("MIXTERA_MIXTURE_TYPE")
 
     assert server_host is not None, "MIXTERA_SERVER_ADDR must be set"
     assert server_port is not None, "MIXTERA_SERVER_PORT must be set"
@@ -200,12 +198,12 @@ def _get_mixtera_dataset():
     else:
         query = Query(job_id).select(("dataset", "!=", "LLAVA_PRETRAIN"))
         mixture_dict = json.loads(mixture)
-        if mixture_dict == {}:
-            mixture = InferringMixture(chunk_size, strict=False)
+        if mixture_dict == {} or mixture_dict is None:
+            mixture = InferringMixture(chunk_size, strict=True if mixture_type == "strict" else False)
             print("Empty mixture, using inferring mixture.")
         else:
             total_weight = sum(mixture_dict.values())
-            mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": [dataset]}): weight / total_weight for dataset, weight in mixture_dict.items()}, strict=False)
+            mixture = StaticMixture(chunk_size, {MixtureKey({"dataset": [dataset]}): weight / total_weight for dataset, weight in mixture_dict.items()}, strict=True if mixture_type == "strict" else False)
             print(f"Using static mixture: {mixture}")
             
     print(f"Creating Mixtera dataset with {dp_groups} data parallel groups.")

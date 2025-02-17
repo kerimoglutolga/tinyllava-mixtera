@@ -2,8 +2,8 @@
 
 #SBATCH --account=a-a09
 #SBATCH --job-name=eval_image_question_answering
-#SBATCH --output=./eval_image_question_answering_mixtera-coco05_gqa01_ocrvqa04-finetune.log
-#SBATCH --error=./eval_image_question_answering_mixtera-coco05_gqa01_ocrvqa04-finetune.err
+#SBATCH --output=./eval_image_question_answering_mixtera-llava_balanced.log
+#SBATCH --error=./eval_image_question_answering_mixtera-llava_balanced.err
 #SBATCH --partition=normal
 #SBATCH --environment=tinyllava
 #SBATCH --nodes=1
@@ -21,10 +21,9 @@ export TRITON_CACHE_DIR=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export HF_HOME=/iopsstor/scratch/cscs/tkerimog/tinyllava/.cache
 export NUM_WORKERS=8
 
-MODEL_PATH="/iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory/outputs/tinyllava-finetune-mixture_llava_balanced-steps_2000-workers_8-chunksize_512/tiny-llava-phi-2-siglip-so400m-patch14-384-mixtera_llava_balanced-finetune/checkpoint-2000"
-MODEL_NAME="tiny-llava-phi-2-siglip-so400m-patch14-384-mixtera_llava_balanced-finetune"
+MODEL_PATH="tinyllava/TinyLLaVA-Phi-2-SigLIP-3.1B"
+MODEL_NAME="TinyLLaVA-Phi-2-SigLIP-3.1B"
 CONV_MODE=phi
-
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
 

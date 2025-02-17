@@ -77,12 +77,3 @@ class TrainingArguments(transformers.TrainingArguments):
     group_by_modality_length: bool = field(default=False)
     vision_tower_lr: Optional[float] = None
     pretrained_model_path: Optional[str] = field(default=None)
-    
-
-@dataclass
-class DoReMiArguments:
-    num_domains: int = field(default=6)
-    reference_model_path: str = ""
-    reweight_eta: float = field(default=1.0)
-    reweight_eps: float = field(default=1e-4)
-    use_doremi: bool = field(default=False)

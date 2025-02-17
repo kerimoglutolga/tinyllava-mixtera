@@ -1,0 +1,4 @@
+name: inferring_best-effort
+components:
+type: best-effort
+

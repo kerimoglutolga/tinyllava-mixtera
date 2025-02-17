@@ -26,7 +26,7 @@ if __name__ == "__main__":
     pretrain_dataset_path = "/iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/blip_laion_cc_sbu_558k.json"
 
     finetune_dataset_name = "LLAVA_FINETUNE"
-    finetune_dataset_path = "/iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/llava_v1_5_mix665k.json"
+    finetune_dataset_path = "/iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/llava_v1_5_mix665k_cleaned.json"
 
     client = MixteraClient.from_remote(host=host, port=port)
     client.register_metadata_parser("GenericMetadataParser", GenericMetadataParser)

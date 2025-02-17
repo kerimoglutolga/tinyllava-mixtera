@@ -12,7 +12,7 @@ from .base import BaseTrainingRecipe
 from . import register_training_recipe
 from ..utils.train_utils import *
 from ..utils import log
-from ..model import TinyLlavaConfig, TinyLlavaForConditionalGeneration, TinyLlavaForDoReMi
+from ..model import TinyLlavaConfig, TinyLlavaForConditionalGeneration
 
 
 @register_training_recipe('lora')

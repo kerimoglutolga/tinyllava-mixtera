@@ -20,7 +20,6 @@ VT_VARIANT="${VT_VERSION#*/}"
 LLM_VARIANT="${LLM_VERSION#*/}"
 
 deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.py \
-    --deepspeed ./scripts/zero3.json \
     --data_path  $DATA_PATH \
     --image_folder $IMAGE_PATH \
     --is_multimodal True \
@@ -31,7 +30,6 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --connector_type $CN_VERSION \
     --mm_vision_select_layer -2 \
     --image_aspect_ratio square \
-    --attn_implementation flash_attention_2 \
     --fp16 True \
     --training_recipe $TRAIN_RECIPE \
     --tune_type_llm full \
@@ -47,17 +45,17 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps  5100 \
-    --save_total_limit 2 \
-    --learning_rate 1e-3 \
+    --save_steps 500 \
+    --save_total_limit 20 \
+    --learning_rate 2e-5 \
     --weight_decay 0. \
     --warmup_ratio 0.03 \
-    --lr_scheduler_type "constant" \
+    --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --tf32 False \
     --model_max_length $MODEL_MAX_LENGTH \
     --gradient_checkpointing True \
-    --dataloader_num_workers 8 \
+    --dataloader_num_workers ${NUM_WORKERS} \
     --lazy_preprocess True \
     --report_to wandb \
     --tokenizer_use_fast False \
@@ -66,9 +64,5 @@ deepspeed --include localhost:0,1,2,3 --master_port 29501 tinyllava/train/train.
     --max_steps $MAX_STEPS \
     --dispatch_batches True \
     --split_batches True \
-    --use_doremi False \
-    --reference_model_path /iopsstor/scratch/cscs/tkerimog/tinyllava/finetune \
-    --num_domains 6 \
-    --reweight_eta 1 \
-    --reweight_eps 1e-5 \
-
+    --deepspeed ./scripts/zero2.json \
+    --attn_implementation flash_attention_2 \

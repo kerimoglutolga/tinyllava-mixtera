@@ -1,9 +1,0 @@
-name: doremi
-components:
-  coco: 0.24
-  ocr_vqa: 0.15
-  gqa: 0.14
-  textvqa: 0.13
-  text: 0.13
-  vg: 0.21
-

@@ -101,11 +101,11 @@ class BaseTrainingRecipe:
         #save trainer
         trainer.save_state()
 
-        #if 'finetune' in self.training_arguments.output_dir and self.training_arguments.pretrained_model_path is not None: # for finetune stage
-        #    if trainer.deepspeed:
-        #        torch.cuda.synchronize()
-        #    trainer.save_model(self.training_arguments.output_dir)
-        #    return
+        if 'finetune' in self.training_arguments.output_dir and self.training_arguments.pretrained_model_path is not None: # for finetune stage
+            if trainer.deepspeed:
+                torch.cuda.synchronize()
+            trainer.save_model(self.training_arguments.output_dir)
+            return
         
         #the followings are for pretrain stage
         #save language model

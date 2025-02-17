@@ -40,12 +40,12 @@ export NUM_WORKERS=8
 
 DATA_PATH=/iopsstor/scratch/cscs/tkerimog/tinyllava/data/text_files/blip_laion_cc_sbu_558k.json
 IMAGE_PATH=/iopsstor/scratch/cscs/tkerimog/tinyllava/data/llava/llava_pretrain/images #
-LLM_VERSION=Qwen/Qwen2-0.5B # llm path in huggingface
+LLM_VERSION=apple/OpenELM-270M-Instruct # llm path in huggingface
 VT_VERSION=google/siglip-so400m-patch14-384 # vision tower path in huggingface
 VT_VERSION2="" # if you are not using mof vision tower, keep it empty
 CN_VERSION=mlp2x_gelu # connector type, other options are: qformer, resampler, etc
 CONV_VERSION=qwen2_base #chat template, other options are: phi, llama, gemmma, etc
-VERSION=mixtera-qwen # experiment name for recording different runnings
+VERSION=mixtera-open_elm # experiment name for recording different runnings
 TRAIN_RECIPE=common # training recipes, other options are: lora, qlora
 MODEL_MAX_LENGTH=2048
 MAX_STEPS=2179 # number of update steps for training i.e. batch_size * gradient_accumulation_steps samples will be processed per step
