@@ -54,8 +54,5 @@ OUTPUT_DIR="/iopsstor/scratch/cscs/tkerimog/tinyllava/"
 
 cd /iopsstor/scratch/cscs/tkerimog/tinyllava/TinyLLaVA_Factory
 
-export HF_TOKEN=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
-export HUGGINGFACE_HUB_TOKEN=$HF_TOKEN
-
 bash scripts/train/openelm/finetune_openelm.sh "$FINETUNE_DATA_PATH" "$FINETUNE_IMAGE_PATH" "$LLM_VERSION" "$VT_VERSION" "$VT_VERSION2" "$CN_VERSION" "$CONV_VERSION" "$VERSION" \
 "$TRAIN_RECIPE" "$MODEL_MAX_LENGTH" "$MAX_STEPS" "$NUM_WORKERS" "$PRETRAINED_MODEL_PATH" "$OUTPUT_DIR"
